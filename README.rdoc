@@ -1,0 +1,16 @@
+= TestingBot
+
+Testingbot.com is a website where you can use our cloud based Selenium grid. Test your web applications in various environments/browsers/devices.
+
+== How to install?
+
+You can install our testingbot ruby-gem by running "gem install testingbot" on your commandline.
+
+== Setup
+
+After you installed the gem you need to run a one part setup.
+Type testingbot in your commandline and fill in the API key and API secret you obtained on testingbot.com
+
+== More information
+
+Get more information on http://www.testingbot.com

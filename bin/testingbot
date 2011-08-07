@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+if ARGV.any?
+  api_key, api_secret = ARGV.first.split(':')
+else
+  
+  p "This utility will help you set up your system to use testingbot.com's infrastructure."
+  p "Once you have entered your api key and secret you will be ready to use our grid"
+
+  p "Please enter your testingbot API KEY:"
+  api_key = gets.chomp
+  p "Please enter your testingbot API SECRET:"
+  api_secret = gets.chomp
+end
+
+File.open(File.expand_path("~/.testingbot"), 'w') {|f| f.write("#{api_key}:#{api_secret}") }
+
+p "Your system is now ready to use testingbot.com's grid infrastructure."
