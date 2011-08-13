@@ -13,36 +13,36 @@ Type testingbot in your commandline and fill in the API key and API secret you o
 
 == Usage
 
-### Example Test::Unit
+=== Example Test::Unit
 You can find an example in our examples folder, try something like this:
 
 	require "rubygems"
 	require "testingbot"
 	class ExampleTest < TestingBot::TestCase
-  	attr_reader :browser
-
-	  def setup
-	    @browser = Selenium::Client::Driver.new \
-	        :host => "http://hub.testingbot.com", 
-	        :port => 4444, 
-	        :browser => "*safari", 
-	        :url => "http://www.google.com", 
-	        :timeout_in_second => 60
-
-	    browser.start_new_browser_session
-	  end
-
-	  def teardown
-	    browser.close_current_browser_session
-	  end
-
-	  def test_page_search
-	    browser.open "/"
-	    assert_equal "Google", browser.title
-	  end
+		attr_reader :browser
+		
+		def setup
+			@browser = Selenium::Client::Driver.new \
+			:host => "http://hub.testingbot.com",
+			:port => 4444,
+			:browser => "*safari",
+			:url => "http://www.google.com",
+			:timeout_in_second => 60
+			
+			browser.start_new_browser_session
+	  	end
+	
+		def teardown
+			browser.close_current_browser_session
+	  		end
+			
+		def test_page_search
+			browser.open "/"
+			assert_equal "Google", browser.title
+		end
 	end
 
-### Example RSpec
+=== Example RSpec
 
 	require "rubygems"
 	require "testingbot"
