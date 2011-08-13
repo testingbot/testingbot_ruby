@@ -6,10 +6,10 @@ Gem::Specification.new do |s|
   s.name        = "testingbot"
   s.version     = Testingbot::VERSION
   s.authors     = ["Jochen"]
-  s.email       = ["jochen@netlog.com"]
+  s.email       = ["info@testingbot.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = "Ruby Gem to be used with testingbot.com"
+  s.description = "This gem makes using our Selenium grid on testingbot.com easy"
 
   s.rubyforge_project = "testingbot"
 
