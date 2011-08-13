@@ -2,7 +2,6 @@ require "testingbot/version"
 
 module Selenium
   module Client
-
     module Protocol
       attr_writer :client_key, :client_secret
       
@@ -41,42 +40,83 @@ module Selenium
   end
 end
 
-module TestingBot
-  class TestingBot::TestCase < Test::Unit::TestCase
-    alias :run_teardown_old :run_teardown
-    alias :handle_exception_old :handle_exception
-    
-    attr_accessor :exception
-    
-    def run_teardown
-      client_key, client_secret = get_testingbot_credentials
-      params = {
-        "session_id" => browser.session_id,
-        "client_key" => client_key,
-        "client_secret" => client_secret,
-        "status_message" => @exception,
-        "success" => passed?,
-        "name" => self.to_s,
-        "kind" => 2
-      }
+module Selenium
+  module Client
+    module Base
+      alias :close_current_browser_session_old :close_current_browser_session
+      attr_accessor :session_id_backup
       
-      url = URI.parse('http://localhost:3000/hq')
-      http = Net::HTTP.new(url.host, url.port)
-      response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
-      run_teardown_old
-    end #def run_teardown
-    
-    def handle_exception(e)
-      @exception = e.to_s
-      handle_exception_old(e)
+      def close_current_browser_session
+        @session_id_backup = @session_id
+        close_current_browser_session_old
+      end
     end
-    
-    def get_testingbot_credentials
+  end
+end
+
+if defined?(Spec)
+  Spec::Runner.configure do |config|
+    config.prepend_after(:each) do
       if File.exists?(File.expand_path("~/.testingbot"))
         str = File.open(File.expand_path("~/.testingbot")) { |f| f.readline }.chomp
-        str.split(':')
-      else
-        raise "Please run the testingbot install tool first"
+        client_key, client_secret = str.split(':')
+      
+        params = {
+          "session_id" => @selenium_driver.session_id_backup,
+          "client_key" => client_key,
+          "client_secret" => client_secret,
+          "status_message" => @execution_error,
+          "success" => !actual_failure?,
+          "name" => description.to_s,
+          "kind" => 2
+        }
+        
+        url = URI.parse('http://localhost:3000/hq')
+        http = Net::HTTP.new(url.host, url.port)
+        response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
+      end
+    end
+  end
+end
+
+if defined?(Test::Unit::TestCase)
+  module TestingBot
+    class TestingBot::TestCase < Test::Unit::TestCase
+      alias :run_teardown_old :run_teardown
+      alias :handle_exception_old :handle_exception
+      
+      attr_accessor :exception
+      
+      def run_teardown
+        client_key, client_secret = get_testingbot_credentials
+        params = {
+          "session_id" => browser.session_id,
+          "client_key" => client_key,
+          "client_secret" => client_secret,
+          "status_message" => @exception,
+          "success" => passed?,
+          "name" => self.to_s,
+          "kind" => 2
+        }
+        
+        url = URI.parse('http://localhost:3000/hq')
+        http = Net::HTTP.new(url.host, url.port)
+        response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
+        run_teardown_old
+      end #def run_teardown
+      
+      def handle_exception(e)
+        @exception = e.to_s
+        handle_exception_old(e)
+      end
+      
+      def get_testingbot_credentials
+        if File.exists?(File.expand_path("~/.testingbot"))
+          str = File.open(File.expand_path("~/.testingbot")) { |f| f.readline }.chomp
+          str.split(':')
+        else
+          raise "Please run the testingbot install tool first"
+        end
       end
     end
   end
