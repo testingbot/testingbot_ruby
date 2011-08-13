@@ -71,7 +71,7 @@ if defined?(Spec)
           "kind" => 2
         }
         
-        url = URI.parse('http://localhost:3000/hq')
+        url = URI.parse('http://api.testingbot.com/hq')
         http = Net::HTTP.new(url.host, url.port)
         response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
       end
@@ -99,11 +99,11 @@ if defined?(Test::Unit::TestCase)
           "kind" => 2
         }
         
-        url = URI.parse('http://localhost:3000/hq')
+        url = URI.parse('http://api.testingbot.com/hq')
         http = Net::HTTP.new(url.host, url.port)
         response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
         run_teardown_old
-      end #def run_teardown
+      end
       
       def handle_exception(e)
         @exception = e.to_s

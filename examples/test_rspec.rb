@@ -12,7 +12,7 @@ describe "People" do
   
   before(:all) do
         @selenium_driver = Selenium::Client::Driver.new \
-            :host => "localhost", 
+            :host => "http://hub.testingbot.com", 
             :port => 4444, 
             :browser => "*safari", 
             :url => "http://www.google.com", 
@@ -27,7 +27,7 @@ describe "People" do
       @selenium_driver.close_current_browser_session
     end
 
-    it "can find Selenium" do    
+    it "can find the right title" do    
       page.open "/"
       page.title.should eql("Google")   
     end

@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Testingbot::VERSION
   s.authors     = ["Jochen"]
   s.email       = ["info@testingbot.com"]
-  s.homepage    = ""
+  s.homepage    = "http://www.testingbot.com"
   s.summary     = "Ruby Gem to be used with testingbot.com"
   s.description = "This gem makes using our Selenium grid on testingbot.com easy"
 
@@ -17,8 +17,8 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
+  s.add_dependency "rspec", "<= 1.3.4"
+  s.add_dependency "selenium-client"
 
-  # specify any dependencies here; for example:
-  # s.add_development_dependency "rspec"
-  # s.add_runtime_dependency "rest-client"
+  s.requirements << "Selenium-Client and RSpec 1"
 end

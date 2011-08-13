@@ -12,7 +12,7 @@ class ExampleTest < TestingBot::TestCase
 
   def setup
     @browser = Selenium::Client::Driver.new \
-        :host => "localhost", 
+        :host => "http://hub.testingbot.com", 
         :port => 4444, 
         :browser => "*safari", 
         :url => "http://www.google.com", 
