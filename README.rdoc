@@ -6,6 +6,8 @@ Testingbot.com is a website where you can use our cloud based Selenium grid. Tes
 
 You can install our testingbot ruby-gem by running "gem install testingbot" on your commandline.
 
+  $ gem install testingbot
+
 == Setup
 
 After you installed the gem you need to run a one part setup.
