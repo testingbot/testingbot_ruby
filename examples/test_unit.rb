@@ -12,12 +12,20 @@ class ExampleTest < TestingBot::TestCase
 
   def setup
     @browser = Selenium::Client::Driver.new \
-        :host => "http://hub.testingbot.com", 
+        :host => "10.0.1.4", 
         :port => 4444, 
-        :browser => "*safari", 
+        :browser => "firefox", 
+        :platform => "WINDOWS",
+        :version => "6",
         :url => "http://www.google.com", 
         :timeout_in_second => 60
-
+      
+    browser.options = {
+      :screenrecorder => false
+    }
+    
+    browser.extra = "First test" # some custom data you can pass with your tests
+    
     browser.start_new_browser_session
   end
 

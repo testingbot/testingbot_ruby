@@ -12,11 +12,13 @@ describe "People" do
   
   before(:all) do
         @selenium_driver = Selenium::Client::Driver.new \
-            :host => "http://hub.testingbot.com", 
+            :host => "http://hub.testingbot.com",
             :port => 4444, 
-            :browser => "*safari", 
+            :browser => "firefox", 
             :url => "http://www.google.com", 
-            :timeout_in_second => 60
+            :timeout_in_second => 60,
+            :platform => "WINDOWS",
+            :version => "6"
     end
 
     before(:each) do
