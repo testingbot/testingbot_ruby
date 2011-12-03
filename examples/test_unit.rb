@@ -12,7 +12,7 @@ class ExampleTest < TestingBot::TestCase
 
   def setup
     @browser = Selenium::Client::Driver.new \
-:host => "hub.testingbot.com",
+        :host => "hub.testingbot.com",
         :port => 4444, 
         :browser => "iexplore", 
         :platform => "WINDOWS",
@@ -20,9 +20,6 @@ class ExampleTest < TestingBot::TestCase
         :url => "http://www.google.com", 
         :timeout_in_second => 60
       
-    browser.options = {
-    }
-    
     browser.extra = "First test" # some custom data you can pass with your tests
     
     browser.start_new_browser_session
@@ -33,11 +30,7 @@ class ExampleTest < TestingBot::TestCase
   end
 
   def test_page_search
-#    browser.window_maximize
     browser.open "/"
-#browser.type "q", "selenium rc"
-#browser.click "btnG"
-#sleep 150
     assert_equal "Google", browser.title
   end
 end
