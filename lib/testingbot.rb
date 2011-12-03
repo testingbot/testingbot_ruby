@@ -44,8 +44,7 @@ module Selenium
   module Client
     module Base
       DEFAULT_OPTIONS = {
-        :screenshot => true,
-        :screenrecorder => true
+        :screenshot => true
       }
       
       alias :close_current_browser_session_old :close_current_browser_session
@@ -112,7 +111,7 @@ if defined?(Spec)
           "extra" => @selenium_driver.extra
         }
         
-        url = URI.parse('http://api.testingbot.com/hq')
+        url = URI.parse('http://testingbot.com/hq')
         http = Net::HTTP.new(url.host, url.port)
         response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
       end
@@ -141,7 +140,7 @@ if defined?(Test::Unit::TestCase)
           "extra" => browser.extra
         }
         
-        url = URI.parse('http://api.testingbot.com/hq')
+        url = URI.parse('http://testingbot.com/hq')
         http = Net::HTTP.new(url.host, url.port)
         response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
         run_teardown_old

@@ -35,7 +35,6 @@ You can find an example in our examples folder, try something like this:
   		:timeout_in_second => 60
   		
   		browser.options = {
-  			:screenrecorder => false,
   			:screenshot     => true
   		}
 
