@@ -26,12 +26,12 @@ You can find an example in our examples folder, try something like this:
   	
   	def setup
   		@browser = Selenium::Client::Driver.new \
-  		:host => "http://hub.testingbot.com",
+  		:host => "hub.testingbot.com",
   		:port => 4444,
-  		:browser => "*safari",
+  		:browser => "firefox",
   		:url => "http://www.google.com",
   		:platform => "WINDOWS",
-  		:version => 6,
+  		:version => 10,
   		:timeout_in_second => 60
   		
   		browser.options = {
