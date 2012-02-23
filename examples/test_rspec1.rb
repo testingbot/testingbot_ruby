@@ -1,15 +1,16 @@
 require 'rubygems'
+gem "rspec", "<2"
+gem "selenium-client"
 require "selenium/client"
-require 'rspec'
-require 'testingbot'
-#require 'testingbot/tunnel'
+require "selenium/rspec/spec_helper"
+gem "testingbot"
+require "testingbot"
 
-# rspec 2
-describe "People", :type => :selenium do
+describe "People" do
   attr_reader :selenium_driver
-    before(:all) do
-        #TestingBot::Tunnel.start_tunnel("selenium@tunnel.testingbot.com", 2052)
-
+  alias :page :selenium_driver
+  
+  before(:all) do
         @selenium_driver = Selenium::Client::Driver.new \
             :host => "hub.testingbot.com",
             :port => 4444, 
@@ -19,21 +20,17 @@ describe "People", :type => :selenium do
             :platform => "WINDOWS",
             :version => "10"
     end
-  
+
     before(:each) do
-      @selenium_driver.start_new_browser_session
-    end
-  
-    after(:each) do
-      @selenium_driver.close_current_browser_session
-    end
-      
-    it "can find the right title" do    
-      @selenium_driver.open "/"
-      @selenium_driver.title.should eql("Google")   
+      selenium_driver.start_new_browser_session
     end
 
-    # after(:all) do
-    #   TestingBot::Tunnel.stop_tunnel
-    # end
+    append_after(:each) do 
+      @selenium_driver.close_current_browser_session
+    end
+
+    it "can find the right title" do    
+      page.open "/"
+      page.title.should eql("Google")   
+    end
 end

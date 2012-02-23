@@ -17,8 +17,4 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
-  s.add_dependency "rspec", "<= 1.3.4"
-  s.add_dependency "selenium-client"
-
-  s.requirements << "Selenium-Client and RSpec 1"
 end
