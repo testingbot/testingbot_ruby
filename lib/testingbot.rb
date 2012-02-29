@@ -116,27 +116,29 @@ begin
           if !@selenium_driver.nil?
             session_id = @selenium_driver.session_id_backup
           elsif defined?(Capybara)
-            session_id = Capybara.drivers[:testingbot].call.browser.instance_variable_get("@bridge").instance_variable_get("@session_id")
+            begin
+              session_id = page.driver.browser.instance_variable_get("@bridge").instance_variable_get("@session_id")
+            rescue Exception => e
+              p "Could not determine sessionID, can not send results to TestingBot.com #{e.message}"
+            end
           end
           
-          if session_id.nil?
-            return
-          end
-          
-          params = {
-            "session_id" => session_id,
-            "client_key" => client_key,
-            "client_secret" => client_secret,
-            "status_message" => @execution_error,
-            "success" => !actual_failure?,
-            "name" => description.to_s,
-            "kind" => 2,
-            "extra" => @selenium_driver.extra
-          }
+          if !session_id.nil?
+            params = {
+              "session_id" => session_id,
+              "client_key" => client_key,
+              "client_secret" => client_secret,
+              "status_message" => @execution_error,
+              "success" => !actual_failure?,
+              "name" => description.to_s,
+              "kind" => 2,
+              "extra" => @selenium_driver.extra
+            }
         
-          url = URI.parse('http://testingbot.com/hq')
-          http = Net::HTTP.new(url.host, url.port)
-          response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
+            url = URI.parse('http://testingbot.com/hq')
+            http = Net::HTTP.new(url.host, url.port)
+            response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
+          end
         else
             puts "Can't post test results to TestingBot since I could not a .testingbot file in your home-directory."
         end
@@ -159,37 +161,46 @@ begin
         if example.metadata[:example_group][:description_args]
           test_name = example.metadata[:example_group][:description_args].join(" ")
         end
+        
+        if example.metadata[:description_args]
+          test_name = test_name + " it " + example.metadata[:description_args].join(" ")
+        end
       end
+      
+      status_message = ""
+      status_message = example.exception.to_s if !example.exception.nil?
       
       session_id = nil
       
       if !@selenium_driver.nil?
         session_id = @selenium_driver.session_id_backup
       elsif defined?(Capybara)
-        session_id = Capybara.drivers[:testingbot].call.browser.instance_variable_get("@bridge").instance_variable_get("@session_id")
+        begin
+          session_id = page.driver.browser.instance_variable_get("@bridge").instance_variable_get("@session_id")
+        rescue Exception => e
+          p "Could not determine sessionID, can not send results to TestingBot.com #{e.message}"
+        end
       end
       
-      if session_id.nil?
-        return
-      end
+      if !session_id.nil?
+        params = {
+          "session_id" => session_id,
+          "client_key" => client_key,
+          "client_secret" => client_secret,
+          "status_message" => status_message,
+          "success" => example.exception.nil?,
+          "name" => test_name,
+          "kind" => 2
+        }
       
-      params = {
-        "session_id" => session_id,
-        "client_key" => client_key,
-        "client_secret" => client_secret,
-        "status_message" => @execution_error,
-        "success" => example.exception.nil?,
-        "name" => test_name,
-        "kind" => 2
-      }
-      
-      if @selenium_driver && @selenium_driver.extra
-        params["extra"] = @selenium_driver.extra
-      end
+        if @selenium_driver && @selenium_driver.extra
+          params["extra"] = @selenium_driver.extra
+        end
     
-      url = URI.parse('http://testingbot.com/hq')
-      http = Net::HTTP.new(url.host, url.port)
-      response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
+        url = URI.parse('http://testingbot.com/hq')
+        http = Net::HTTP.new(url.host, url.port)
+        response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
+      end
     else
       puts "Can't post test results to TestingBot since I could not a .testingbot file in your home-directory."
     end
