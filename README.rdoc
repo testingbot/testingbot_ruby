@@ -32,7 +32,7 @@ You can find an example in our examples folder, try something like this:
   		:url => "http://www.google.com",
   		:platform => "WINDOWS",
   		:version => 10,
-  		:timeout_in_second => 60
+  		:timeout_in_second => 90
   		
   		browser.options = {
   			:screenshot     => true
@@ -67,7 +67,7 @@ This example uses RSpec 2. You can run it with rspec test_rspec.rb
             :port => 4444, 
             :browser => "firefox", 
             :url => "http://www.google.com", 
-            :timeout_in_second => 60,
+            :timeout_in_second => 90,
             :platform => "WINDOWS",
             :version => "10"
     end
@@ -107,7 +107,7 @@ This example uses RSpec 1. You can run it with spec test_rspec1.rb
               :port => 4444, 
               :browser => "firefox", 
               :url => "http://www.google.com", 
-              :timeout_in_second => 60,
+              :timeout_in_second => 90,
               :platform => "WINDOWS",
               :version => "10"
       end
@@ -162,6 +162,10 @@ This example uses RSpec 2 together with capybara and Selenium webdriver. You can
     end
   end
 
+== Capybara and Cucumber
+The examples directory contains an example of testing with Capybara and Cucumber
+More info available on http://testingbot.com/support/getting-started/cucumber.html
+
 == Extra options
 You can specify extra options like enabling/disabling the screenrecording or screenshot feature. (browser.options)
 
@@ -170,7 +174,7 @@ For example a build number, or other custom data. (browser.extra = "")
 
 == More information
 
-Get more information on http://www.testingbot.com
+Get more information on http://testingbot.com
 
 == Copyright
 
