@@ -1,39 +1,15 @@
 require "testingbot/version"
+require "testingbot/config"
 
 # if selenium RC, add testingbot credentials to request
 if defined?(Selenium) && defined?(Selenium::Client) && defined?(Selenium::Client::Protocol)
   module Selenium
     module Client
       module Protocol
-        attr_writer :client_key, :client_secret
-        
-          def client_key
-            if @client_key.nil?
-              @client_key, @client_secret = get_testingbot_credentials
-            end
-            @client_key
-          end
-          
-          def client_secret
-            if @client_secret.nil?
-              @client_key, @client_secret = get_testingbot_credentials
-            end
-            @client_secret
-          end
-          
-          def get_testingbot_credentials
-            if File.exists?(File.expand_path("~/.testingbot"))
-              str = File.open(File.expand_path("~/.testingbot")) { |f| f.readline }.chomp
-              str.split(':')
-            else
-              raise "Please run the testingbot install tool first"
-            end
-          end
-          
           # add custom parameters for testingbot.com
           def http_request_for_testingbot(verb, args)
             data = http_request_for_original(verb, args)
-            data << "&client_key=#{client_key}&client_secret=#{client_secret}"
+            data << "&client_key=#{TestingBot.get_config[:client_key]}&client_secret=#{TestingBot.get_config[:client_secret]}"
           end
 
           begin
@@ -107,9 +83,10 @@ begin
   require "selenium/rspec/spec_helper"
     Spec::Runner.configure do |config|
       config.prepend_after(:each) do
-        if File.exists?(File.expand_path("~/.testingbot"))
-          str = File.open(File.expand_path("~/.testingbot")) { |f| f.readline }.chomp
-          client_key, client_secret = str.split(':')
+        client_key = TestingBot.get_config[:client_key]
+        client_secret = TestingBot.get_config[:client_secret]
+        
+        if !client_key.nil?
           
           session_id = nil
           
@@ -152,10 +129,11 @@ begin
   require 'rspec'
   
   ::RSpec.configuration.after :each do
-    if File.exists?(File.expand_path("~/.testingbot"))
-      str = File.open(File.expand_path("~/.testingbot")) { |f| f.readline }.chomp
-      client_key, client_secret = str.split(':')
     
+    client_key = TestingBot.get_config[:client_key]
+    client_secret = TestingBot.get_config[:client_secret]
+    
+    if !client_key.nil?
       test_name = ""
       if example.metadata && example.metadata[:example_group]
         if example.metadata[:example_group][:description_args]
@@ -208,7 +186,7 @@ begin
 rescue LoadError
 end
 
-if defined?(Test::Unit::TestCase)
+if defined?(Test::Unit::TestCase) && (Test::Unit::TestCase.respond_to?('run_teardown'))
   module TestingBot
     class TestingBot::TestCase < Test::Unit::TestCase
       alias :run_teardown_old :run_teardown
@@ -217,7 +195,9 @@ if defined?(Test::Unit::TestCase)
       attr_accessor :exception
       
       def run_teardown
-        client_key, client_secret = get_testingbot_credentials
+        client_key = TestingBot.get_config[:client_key]
+        client_secret = TestingBot.get_config[:client_secret]
+        
         params = {
           "session_id" => browser.session_id,
           "client_key" => client_key,
@@ -238,15 +218,6 @@ if defined?(Test::Unit::TestCase)
       def handle_exception(e)
         @exception = e.to_s
         handle_exception_old(e)
-      end
-      
-      def get_testingbot_credentials
-        if File.exists?(File.expand_path("~/.testingbot"))
-          str = File.open(File.expand_path("~/.testingbot")) { |f| f.readline }.chomp
-          str.split(':')
-        else
-          raise "Please run the testingbot install tool first"
-        end
       end
     end
   end
