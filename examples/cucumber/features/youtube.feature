@@ -1,3 +1,4 @@
+@selenium
 Feature: YouTube has a search function.
 
 Background:
