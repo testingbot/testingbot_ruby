@@ -51,9 +51,9 @@ module TestingBot
 
     def get(url)
       uri = URI(API_URL + '/v' + VERSION.to_s + url)
-          req = Net::HTTP::Get.new(uri.request_uri)
-          req.basic_auth @config[:client_key], @config[:client_secret]
-          res = Net::HTTP.start(uri.hostname, uri.port) {|http|
+      req = Net::HTTP::Get.new(uri.request_uri)
+      req.basic_auth @config[:client_key], @config[:client_secret]
+      res = Net::HTTP.start(uri.hostname, uri.port) {|http|
         http.request(req)
       }
 
@@ -68,10 +68,10 @@ module TestingBot
 
     def put(url, params = {})
       uri = URI(API_URL + '/v' + VERSION.to_s + url)
-          req = Net::HTTP::Put.new(uri.request_uri)
-          req.basic_auth @config[:client_key], @config[:client_secret]
-          req.set_form_data(params)
-          res = Net::HTTP.start(uri.hostname, uri.port) {|http|
+      req = Net::HTTP::Put.new(uri.request_uri)
+      req.basic_auth @config[:client_key], @config[:client_secret]
+      req.set_form_data(params)
+      res = Net::HTTP.start(uri.hostname, uri.port) {|http|
         http.request(req)
       }
 
@@ -86,10 +86,10 @@ module TestingBot
 
     def delete(url, params = {})
       uri = URI(API_URL + '/v' + VERSION.to_s + url)
-          req = Net::HTTP::Delete.new(uri.request_uri)
-          req.basic_auth @config[:client_key], @config[:client_secret]
-          req.set_form_data(params)
-          res = Net::HTTP.start(uri.hostname, uri.port) {|http|
+      req = Net::HTTP::Delete.new(uri.request_uri)
+      req.basic_auth @config[:client_key], @config[:client_secret]
+      req.set_form_data(params)
+      res = Net::HTTP.start(uri.hostname, uri.port) {|http|
         http.request(req)
       }
 
@@ -103,10 +103,10 @@ module TestingBot
     end
 
     def post(url, params = {})
-          url = URI.parse(API_URL + '/v' + VERSION + url)
-          http = Net::HTTP.new(url.host, url.port)
-          http.basic_auth @config[:client_key], @config[:client_secret]
-          response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
+      url = URI.parse(API_URL + '/v' + VERSION + url)
+      http = Net::HTTP.new(url.host, url.port)
+      http.basic_auth @config[:client_key], @config[:client_secret]
+      response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
     end
   end
 end
