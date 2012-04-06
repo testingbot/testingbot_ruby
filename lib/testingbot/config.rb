@@ -5,6 +5,10 @@ module TestingBot
     @@config = TestingBot::Config.new if @@config.nil?
     @@config
   end
+
+  def self.config
+    yield self.get_config
+  end
   
   class Config
     
@@ -21,6 +25,10 @@ module TestingBot
       @options[key]
     end
 
+    def add_options(options = {})
+      @options = @options.merge(options)
+    end
+
     def []=(key, value)
       @options[key] = value
     end
@@ -31,6 +39,10 @@ module TestingBot
     
     def client_secret
       @options[:client_secret]
+    end
+
+    def desired_capabilities
+      @options[:desired_capabilities]
     end
     
     private
