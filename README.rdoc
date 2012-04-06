@@ -19,148 +19,137 @@ Type testingbot in your commandline and fill in the API key and API secret you o
 === Example Test::Unit
 You can find an example in our examples folder, try something like this:
 
-  require "rubygems"
-  require "testingbot"
-  class ExampleTest < TestingBot::TestCase
-  	attr_reader :browser
-  	
-  	def setup
-  		@browser = Selenium::Client::Driver.new \
-  		:host => "hub.testingbot.com",
-  		:port => 4444,
-  		:browser => "firefox",
-  		:url => "http://www.google.com",
-  		:platform => "WINDOWS",
-  		:version => 10,
-  		:timeout_in_second => 90
-  		
-  		browser.options = {
-  			:screenshot     => true
-  		}
+    require "rubygems"
+    require "testingbot"
+    class ExampleTest < TestingBot::TestCase
+    	attr_reader :browser
+    	
+    	def setup
+    		@browser = Selenium::Client::Driver.new \
+    		:browser => "firefox",
+    		:url => "http://www.google.com",
+    		:platform => "WINDOWS",
+    		:version => 10,
+    		:timeout_in_second => 90
+    		
+    		browser.options = {
+    			:screenshot     => true
+    		}
 
-  		browser.start_new_browser_session
-  	end
-  	
-  	def teardown
-  		browser.close_current_browser_session
-  	end
-  	
-  	def test_page_search
-  		browser.open "/"
-  		assert_equal "Google", browser.title
-  	end
-  end
+    		browser.start_new_browser_session
+    	end
+    	
+    	def teardown
+    		browser.close_current_browser_session
+    	end
+    	
+    	def test_page_search
+    		browser.open "/"
+    		assert_equal "Google", browser.title
+    	end
+    end
 
 === Example RSpec 2
 This example uses RSpec 2. You can run it with rspec test_rspec.rb
 
-  require 'rubygems'
-  require "selenium/client"
-  require 'rspec'
-  require 'testingbot'
+    require 'rubygems'
+    require "selenium/client"
+    require 'rspec'
+    require 'testingbot'
+    require 'testingbot/tunnel'
 
-  describe "Test", :type => :selenium do
-    attr_reader :selenium_driver
-    before(:all) do
+    # rspec 2
+    describe "People", :type => :selenium do
+      attr_reader :selenium_driver
+      before(:all) do
+        # uncomment if you want to use our Tunnel
+        # tunnel = TestingBot::Tunnel.new
+        # tunnel.start
+
         @selenium_driver = Selenium::Client::Driver.new \
-            :host => "hub.testingbot.com",
-            :port => 4444, 
             :browser => "firefox", 
             :url => "http://www.google.com", 
-            :timeout_in_second => 90,
+            :timeout_in_second => 60,
             :platform => "WINDOWS",
             :version => "10"
+      end
+    
+      before(:each) do
+        @selenium_driver.start_new_browser_session
+      end
+    
+      after(:each) do
+        @selenium_driver.close_current_browser_session
+      end
+        
+      it "can find the right title" do    
+        @selenium_driver.open "/"
+        @selenium_driver.title.should eql("Google")   
+      end
     end
-  
-    before(:each) do
-      @selenium_driver.start_new_browser_session
-    end
-  
-    after(:each) do
-      @selenium_driver.close_current_browser_session
-    end
-      
-    it "can find the right title" do    
-      @selenium_driver.open "/"
-      @selenium_driver.title.should eql("Google")   
-    end
-  end
 
 === Example RSpec 1
 This example uses RSpec 1. You can run it with spec test_rspec1.rb
 
-  require 'rubygems'
-  gem "rspec", "<2"
-  gem "selenium-client"
-  require "selenium/client"
-  require "selenium/rspec/spec_helper"
-  gem "testingbot"
-  require "testingbot"
+    require 'rubygems'
+    gem "rspec", "<2"
+    gem "selenium-client"
+    require "selenium/client"
+    require "selenium/rspec/spec_helper"
+    gem "testingbot"
+    require "testingbot"
 
-  describe "Test" do
-    attr_reader :selenium_driver
-    alias :page :selenium_driver
-    
-    before(:all) do
-          @selenium_driver = Selenium::Client::Driver.new \
-              :host => "hub.testingbot.com",
-              :port => 4444, 
-              :browser => "firefox", 
-              :url => "http://www.google.com", 
-              :timeout_in_second => 90,
-              :platform => "WINDOWS",
-              :version => "10"
-      end
+    describe "Test" do
+      attr_reader :selenium_driver
+      alias :page :selenium_driver
+      
+        before(:all) do
+            @selenium_driver = Selenium::Client::Driver.new \
+                :browser => "firefox", 
+                :url => "http://www.google.com", 
+                :timeout_in_second => 90,
+                :platform => "WINDOWS",
+                :version => "10"
+        end
 
-      before(:each) do
-        selenium_driver.start_new_browser_session
-      end
+        before(:each) do
+          @selenium_driver.start_new_browser_session
+        end
 
-      append_after(:each) do 
-        @selenium_driver.close_current_browser_session
-      end
+        append_after(:each) do 
+          @selenium_driver.close_current_browser_session
+        end
 
-      it "can find the right title" do    
-        page.open "/"
-        page.title.should eql("Google")   
-      end
-  end
+        it "can find the right title" do    
+          page.open "/"
+          page.title.should eql("Google")   
+        end
+    end
 
 === Example RSpec 2 and Capybara
 This example uses RSpec 2 together with capybara and Selenium webdriver. You can run it with rspec capybara.rb
 
-  require 'rspec'
-  require 'capybara/rspec'
-  require 'selenium/webdriver'
-  require 'testingbot'
+    require 'rspec'
+    require 'capybara/rspec'
+    require 'testingbot'
+    require 'testingbot/capybara'
 
-  RSpec.configure do |config|
-    caps = Selenium::WebDriver::Remote::Capabilities.firefox  
-    caps.version = "8"  
-    caps.platform = :WINDOWS 
-
-    Capybara.default_driver = :testingbot
-    Capybara.register_driver :testingbot do |app|
-      client = Selenium::WebDriver::Remote::Http::Default.new
-        client.timeout = 120
-        Capybara::Selenium::Driver.new(app,
-          :browser => :remote,
-          :url => "http://key:secret@hub.testingbot.com:4444/wd/hub",
-          :http_client => client,
-          :desired_capabilities => caps)
-    end
-  end
-
-  describe "Test", :type => :request do
-    before :all do
-        Capybara.app_host = "http://testingbot.com"
+    TestingBot::config do |config|
+      config[:desired_capabilities] = { :browserName => "firefox", :version => 9, :platform => "WINDOWS" }
+      # config.require_tunnel # uncomment if you want to use our Tunnel
     end
 
-    it 'has a homepage with the word Selenium' do
-      visit '/'
-      page.should have_content('Selenium')
+    describe "People", :type => :request do
+      before :all do
+        Capybara.current_driver = :testingbot
+          Capybara.app_host = "http://testingbot.com"
+      end
+
+      it 'has a homepage with the word Selenium' do
+        visit '/'
+        page.should have_content('Selenium')
+      end
     end
-  end
 
 == Capybara and Cucumber
 The examples directory contains an example of testing with Capybara and Cucumber
