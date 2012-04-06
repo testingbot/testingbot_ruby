@@ -15,9 +15,9 @@ module TestingBot
 			@config.add_options(options)
 
 			http_client = ::Selenium::WebDriver::Remote::Http::Persistent.new
-		    http_client.timeout = 400
-		    @driver = ::Selenium::WebDriver.for(:remote, :url => "http://#{@config[:client_key]}:#{@config[:client_secret]}@#{@config[:host]}:#{@config[:port]}/wd/hub", :desired_capabilities => @config.desired_capabilities, :http_client => http_client)
-		    http_client.timeout = 120
+		  http_client.timeout = 400
+		  @driver = ::Selenium::WebDriver.for(:remote, :url => "http://#{@config[:client_key]}:#{@config[:client_secret]}@#{@config[:host]}:#{@config[:port]}/wd/hub", :desired_capabilities => @config.desired_capabilities, :http_client => http_client)
+		  http_client.timeout = 120
 		end
 
 		def method_missing(meth, *args)
@@ -42,7 +42,7 @@ if defined?(Selenium) && defined?(Selenium::Client) && defined?(Selenium::Client
           # add custom parameters for testingbot.com
           def http_request_for_testingbot(verb, args)
             data = http_request_for_original(verb, args)
-            data << "&client_key=#{TestingBot.get_config[:client_key]}&client_secret=#{TestingBot.get_config[:client_secret]}"
+            data << "&client_key=#{TestingBot.get_config[:client_key]}&client_secret=#{TestingBot.get_config[:client_secret]}" unless TestingBot.get_config[:client_key].nil?
           end
 
           begin
@@ -72,8 +72,11 @@ if defined?(Selenium) && defined?(Selenium::Client) && defined?(Selenium::Client
         attr_accessor :extra
         attr_accessor :platform
         attr_accessor :version
+
+        attr_reader :config
         
         def initialize(*args)
+          @config = TestingBot::get_config
           if args[0].kind_of?(Hash)
             options = args[0]
             @platform = options[:platform] || "WINDOWS"
@@ -82,8 +85,8 @@ if defined?(Selenium) && defined?(Selenium::Client) && defined?(Selenium::Client
           
           @options = DEFAULT_OPTIONS
           initialize_old(*args)
-          @host = "hub.testingbot.com" if @host.nil?
-          @port = 4444 if @port.nil?
+          @host = options[:host] || @config[:host]
+          @port = options[:port] || @config[:port]
         end
         
         def close_current_browser_session

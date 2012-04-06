@@ -5,6 +5,7 @@ require 'testingbot/capybara'
 
 TestingBot::config do |config|
 	config[:desired_capabilities] = { :browserName => "firefox", :version => 9, :platform => "WINDOWS" }
+	#config.require_tunnel
 end
 
 describe "People", :type => :request do

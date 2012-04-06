@@ -7,7 +7,8 @@ module TestingBot
     def initialize(opts = {})
       @available = false
       @errors = []
-      @config = TestingBot::Config.new(opts)
+      @config = TestingBot.get_config
+      @config.add_options(opts)
       @options = default_options
       @options = @options.merge(opts)
 
@@ -15,6 +16,8 @@ module TestingBot
     end
 
     def start
+      @config.require_tunnel
+      
       p "Starting the TestingBot Tunnel" if @options[:verbose] == true
       @process = IO.popen("exec java -jar #{get_jar_path} #{config[:client_key]} #{config[:client_secret]} #{extra_options} 2>&1")
       at_exit do
