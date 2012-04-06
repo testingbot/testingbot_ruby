@@ -6,23 +6,23 @@ require 'selenium/webdriver/remote/http/persistent'
 
 module TestingBot
 
-	class SeleniumWebdriver
+  class SeleniumWebdriver
 
-		attr_reader :config, :driver
+    attr_reader :config, :driver
 
-		def initialize(options = {})
-			@config = TestingBot::get_config
-			@config.add_options(options)
+    def initialize(options = {})
+      @config = TestingBot::get_config
+      @config.add_options(options)
 
-			http_client = ::Selenium::WebDriver::Remote::Http::Persistent.new
-		  http_client.timeout = 400
-		  @driver = ::Selenium::WebDriver.for(:remote, :url => "http://#{@config[:client_key]}:#{@config[:client_secret]}@#{@config[:host]}:#{@config[:port]}/wd/hub", :desired_capabilities => @config.desired_capabilities, :http_client => http_client)
-		  http_client.timeout = 120
-		end
+      http_client = ::Selenium::WebDriver::Remote::Http::Persistent.new
+      http_client.timeout = 400
+      @driver = ::Selenium::WebDriver.for(:remote, :url => "http://#{@config[:client_key]}:#{@config[:client_secret]}@#{@config[:host]}:#{@config[:port]}/wd/hub", :desired_capabilities => @config.desired_capabilities, :http_client => http_client)
+      http_client.timeout = 120
+    end
 
-		def method_missing(meth, *args)
-	    @driver.send(meth, *args)
-	  end
+    def method_missing(meth, *args)
+      @driver.send(meth, *args)
+    end
 
     def session_id
       @driver.send(:bridge).session_id
@@ -31,7 +31,7 @@ module TestingBot
     def stop
       @driver.quit
     end
-	end
+  end
 end
 
 # if selenium RC, add testingbot credentials to request

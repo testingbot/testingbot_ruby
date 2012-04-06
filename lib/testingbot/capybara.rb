@@ -6,36 +6,36 @@ require 'capybara/dsl'
 @tunnel = nil
 
 module TestingBot
-	module Capybara
+  module Capybara
 
-		def self.start_tunnel
-			return @tunnel unless @tunnel.nil?
+    def self.start_tunnel
+      return @tunnel unless @tunnel.nil?
 
-			@tunnel = TestingBot::Tunnel.new(TestingBot.get_config[:tunnel_options] || {})
-			@tunnel.start
-		end
+      @tunnel = TestingBot::Tunnel.new(TestingBot.get_config[:tunnel_options] || {})
+      @tunnel.start
+    end
 
-		class CustomDriver < ::Capybara::Selenium::Driver
-			  def browser
-			    unless @browser
-			      if TestingBot.get_config[:require_tunnel]
-			      	TestingBot::Capybara.start_tunnel
-			      end
+    class CustomDriver < ::Capybara::Selenium::Driver
+        def browser
+          unless @browser
+            if TestingBot.get_config[:require_tunnel]
+              TestingBot::Capybara.start_tunnel
+            end
 
-			      @browser = TestingBot::SeleniumWebdriver.new
+            @browser = TestingBot::SeleniumWebdriver.new
 
-			      main = Process.pid
-			      at_exit do
-			        @browser.quit if @browser
-			        if TestingBot.get_config[:require_tunnel]
-				      	@tunnel.stop unless @tunnel.nil?
-				    end
-			      end
-			    end
-			    @browser
-			  end
-		end
-	end
+            main = Process.pid
+            at_exit do
+              @browser.quit if @browser
+              if TestingBot.get_config[:require_tunnel]
+                @tunnel.stop unless @tunnel.nil?
+            end
+            end
+          end
+          @browser
+        end
+    end
+  end
 end
 
 Capybara.register_driver :testingbot do |app|
