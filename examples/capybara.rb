@@ -9,6 +9,7 @@ end
 
 describe "People", :type => :request do
 	before :all do
+		Capybara.current_driver = :testingbot
 	    Capybara.app_host = "http://testingbot.com"
  	end
 

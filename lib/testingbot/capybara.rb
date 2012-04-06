@@ -41,5 +41,3 @@ end
 Capybara.register_driver :testingbot do |app|
   TestingBot::Capybara::CustomDriver.new(app)
 end
-
-Capybara.default_driver = :testingbot
