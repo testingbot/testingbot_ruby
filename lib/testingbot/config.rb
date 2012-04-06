@@ -14,7 +14,7 @@ module TestingBot
     attr_reader :options
     
     def initialize(options = {})
-      @options = {}
+      @options = default_options
       @options = @options.merge(load_config_file)
       @options = @options.merge(load_config_environment)
       @options = @options.merge(options)
@@ -31,6 +31,12 @@ module TestingBot
     def []=(key, value)
       @options[key] = value
     end
+
+    def require_tunnel(host = "127.0.0.1", port = 4445)
+      @options[:require_tunnel] = true
+      @options[:host] = host
+      @options[:port] = port
+    end
     
     def client_key
       @options[:client_key]
@@ -45,6 +51,13 @@ module TestingBot
     end
     
     private
+
+    def default_options
+      {
+        :host => "hub.testingbot.com",
+        :port => 4444
+      }
+    end
     
     def load_config_file
       options = {}
