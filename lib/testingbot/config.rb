@@ -1,6 +1,5 @@
 module TestingBot
   @@config = nil
-  
   def self.get_config
     @@config = TestingBot::Config.new if @@config.nil?
     @@config
