@@ -1,6 +1,7 @@
 require "testingbot/version"
 require "testingbot/config"
 require "testingbot/selenium"
+require "testingbot/api"
 
 # rspec 1
 begin
@@ -26,20 +27,20 @@ begin
           end
           
           if !session_id.nil?
+            @api = TestingBot::Api.new
             params = {
               "session_id" => session_id,
-              "client_key" => client_key,
-              "client_secret" => client_secret,
               "status_message" => @execution_error,
               "success" => !actual_failure?,
               "name" => description.to_s,
-              "kind" => 2,
-              "extra" => @selenium_driver.extra
+              "kind" => 2
             }
-        
-            url = URI.parse('http://testingbot.com/hq')
-            http = Net::HTTP.new(url.host, url.port)
-            response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
+          
+            if @selenium_driver && @selenium_driver.extra
+              params["extra"] = @selenium_driver.extra
+            end
+
+            data = @api.update_test(session_id, params)
           end
         else
             puts "Can't post test results to TestingBot since I could not a .testingbot file in your home-directory."
@@ -79,30 +80,27 @@ begin
         session_id = @selenium_driver.session_id_backup
       elsif defined?(Capybara)
         begin
-          session_id = page.driver.browser.instance_variable_get("@bridge").instance_variable_get("@session_id")
+          session_id = page.driver.browser.session_id
         rescue Exception => e
           p "Could not determine sessionID, can not send results to TestingBot.com #{e.message}"
         end
       end
       
       if !session_id.nil?
+        @api = TestingBot::Api.new
         params = {
-          "session_id" => session_id,
-          "client_key" => client_key,
-          "client_secret" => client_secret,
-          "status_message" => status_message,
-          "success" => example.exception.nil?,
-          "name" => test_name,
-          "kind" => 2
+            "session_id" => session_id,
+            "status_message" => status_message,
+            "success" => example.exception.nil?,
+            "name" => test_name,
+            "kind" => 2
         }
       
         if @selenium_driver && @selenium_driver.extra
           params["extra"] = @selenium_driver.extra
         end
-    
-        url = URI.parse('http://testingbot.com/hq')
-        http = Net::HTTP.new(url.host, url.port)
-        response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
+
+        data = @api.update_test(session_id, params)
       end
     else
       puts "Can't post test results to TestingBot since I could not a .testingbot file in your home-directory."
@@ -123,20 +121,17 @@ if defined?(Test::Unit::TestCase) && (Test::Unit::TestCase.respond_to?('run_tear
         client_key = TestingBot.get_config[:client_key]
         client_secret = TestingBot.get_config[:client_secret]
         
+        @api = TestingBot::Api.new
         params = {
-          "session_id" => browser.session_id,
-          "client_key" => client_key,
-          "client_secret" => client_secret,
-          "status_message" => @exception,
-          "success" => passed?,
-          "name" => self.to_s,
-          "kind" => 2,
-          "extra" => browser.extra
+            "session_id" => browser.session_id,
+            "status_message" => @exception,
+            "success" => passed?,
+            "name" => self.to_s,
+            "kind" => 2,
+            "extra" => browser.extra
         }
-        
-        url = URI.parse('http://testingbot.com/hq')
-        http = Net::HTTP.new(url.host, url.port)
-        response = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
+
+        data = @api.update_test(session_id, params)
         run_teardown_old
       end
       
