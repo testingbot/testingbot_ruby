@@ -11,9 +11,10 @@ module TestingBot
     attr_reader :options
     
     def initialize(options = {})
-      @options = options
+      @options = {}
       @options = @options.merge(load_config_file)
       @options = @options.merge(load_config_environment)
+      @options = @options.merge(options)
     end
     
     def [](key)
