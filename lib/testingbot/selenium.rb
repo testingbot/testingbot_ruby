@@ -16,17 +16,21 @@ module TestingBot
 
 			http_client = ::Selenium::WebDriver::Remote::Http::Persistent.new
 		    http_client.timeout = 400
-		    @driver = ::Selenium::WebDriver.for(:remote, :url => "http://#{@config[:client_key]}:#{@config[:client_secret]}@hub.testingbot.com:4444/wd/hub", :desired_capabilities => @config.desired_capabilities, :http_client => http_client)
+		    @driver = ::Selenium::WebDriver.for(:remote, :url => "http://#{@config[:client_key]}:#{@config[:client_secret]}@#{@config[:host]}:#{@config[:port]}/wd/hub", :desired_capabilities => @config.desired_capabilities, :http_client => http_client)
 		    http_client.timeout = 120
 		end
 
 		def method_missing(meth, *args)
-	      @driver.send(meth, *args)
-	    end
+	    @driver.send(meth, *args)
+	  end
 
-	    def stop
-	      @driver.quit
-	    end
+    def session_id
+      @driver.send(:bridge).session_id
+    end
+
+    def stop
+      @driver.quit
+    end
 	end
 end
 
