@@ -27,7 +27,7 @@ begin
           end
           
           if !session_id.nil?
-            @api = TestingBot::Api.new
+            api = TestingBot::Api.new
             params = {
               "session_id" => session_id,
               "status_message" => @execution_error,
@@ -40,7 +40,7 @@ begin
               params["extra"] = @selenium_driver.extra
             end
 
-            data = @api.update_test(session_id, params)
+            data = api.update_test(session_id, params)
           end
         else
             puts "Can't post test results to TestingBot since I could not a .testingbot file in your home-directory."
@@ -87,7 +87,7 @@ begin
       end
       
       if !session_id.nil?
-        @api = TestingBot::Api.new
+        api = TestingBot::Api.new
         params = {
             "session_id" => session_id,
             "status_message" => status_message,
@@ -100,7 +100,7 @@ begin
           params["extra"] = @selenium_driver.extra
         end
 
-        data = @api.update_test(session_id, params)
+        data = api.update_test(session_id, params)
       end
     else
       puts "Can't post test results to TestingBot since I could not a .testingbot file in your home-directory."
@@ -121,7 +121,7 @@ if defined?(Test::Unit::TestCase) && (Test::Unit::TestCase.respond_to?('run_tear
         client_key = TestingBot.get_config[:client_key]
         client_secret = TestingBot.get_config[:client_secret]
         
-        @api = TestingBot::Api.new
+        api = TestingBot::Api.new
         params = {
             "session_id" => browser.session_id,
             "status_message" => @exception,
@@ -131,7 +131,7 @@ if defined?(Test::Unit::TestCase) && (Test::Unit::TestCase.respond_to?('run_tear
             "extra" => browser.extra
         }
 
-        data = @api.update_test(session_id, params)
+        data = api.update_test(session_id, params)
         run_teardown_old
       end
       
