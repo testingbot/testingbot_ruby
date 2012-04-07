@@ -5,7 +5,7 @@ require "testingbot/version"
 Gem::Specification.new do |s|
   s.name        = "testingbot"
   s.version     = Testingbot::VERSION
-  s.authors     = ["Jochen"]
+  s.authors     = ["Jochen Delabie"]
   s.email       = ["info@testingbot.com"]
   s.homepage    = "http://www.testingbot.com"
   s.summary     = "Ruby Gem to be used with testingbot.com"
