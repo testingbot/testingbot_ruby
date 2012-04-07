@@ -115,11 +115,9 @@ begin
 rescue LoadError
 end
 
-if defined?(Test::Unit::TestCase) && (Test::Unit::TestCase.respond_to?('run_teardown'))
+if defined?(Test::Unit::TestCase)
   module TestingBot
     class TestingBot::TestCase < Test::Unit::TestCase
-      alias :run_teardown_old :run_teardown
-      alias :handle_exception_old :handle_exception
       
       attr_accessor :exception
       
@@ -145,6 +143,9 @@ if defined?(Test::Unit::TestCase) && (Test::Unit::TestCase.respond_to?('run_tear
         @exception = e.to_s
         handle_exception_old(e)
       end
+      
+      alias :run_teardown_old :run_teardown
+      alias :handle_exception_old :handle_exception
     end
   end
 end

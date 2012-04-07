@@ -1,11 +1,7 @@
-require "rubygems"
-gem "selenium-client"
-require "selenium/client"
-gem 'test-unit'
+require 'rubygems'
 require 'test/unit'
-
-gem "testingbot"
-require "testingbot"
+require "selenium/client"
+require 'testingbot'
 
 class ExampleTest < TestingBot::TestCase
   attr_reader :browser
@@ -14,14 +10,12 @@ class ExampleTest < TestingBot::TestCase
     @browser = Selenium::Client::Driver.new \
         :host => "hub.testingbot.com",
         :port => 4444, 
-        :browser => "iexplore", 
+        :browser => "firefox", 
         :platform => "WINDOWS",
-        :version => "7",
+        :version => "10",
         :url => "http://www.google.com", 
         :timeout_in_second => 60
       
-    browser.extra = "First test" # some custom data you can pass with your tests
-    
     browser.start_new_browser_session
   end
 
