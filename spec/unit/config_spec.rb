@@ -1,5 +1,5 @@
 require "rspec"
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../../lib/testingbot/config.rb')
 
 describe TestingBot::Config do
   describe '#[]' do
