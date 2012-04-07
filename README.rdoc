@@ -142,7 +142,7 @@ This example uses RSpec 2 together with capybara and Selenium webdriver. You can
   describe "People", :type => :request do
     before :all do
       Capybara.current_driver = :testingbot
-        Capybara.app_host = "http://testingbot.com"
+      Capybara.app_host = "http://testingbot.com"
     end
 
     it 'has a homepage with the word Selenium' do
