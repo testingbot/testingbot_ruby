@@ -8,6 +8,17 @@ begin
   require 'spec'
   require "selenium/rspec/spec_helper"
     Spec::Runner.configure do |config|
+      config.before(:suite) do
+        if TestingBot.get_config[:require_tunnel]
+          @@tunnel = TestingBot::Tunnel.new(TestingBot.get_config[:tunnel_options] || {})
+          @@tunnel.start
+        end
+      end
+
+      config.after(:suite) do
+        @@tunnel.stop if defined? @@tunnel
+      end
+
       config.prepend_after(:each) do
         client_key = TestingBot.get_config[:client_key]
         client_secret = TestingBot.get_config[:client_secret]
@@ -53,6 +64,17 @@ end
 # rspec 2
 begin
   require 'rspec'
+
+  ::RSpec.configuration.before :suite do
+    if TestingBot.get_config[:require_tunnel]
+      @@tunnel = TestingBot::Tunnel.new(TestingBot.get_config[:tunnel_options] || {})
+      @@tunnel.start
+    end
+  end
+
+  ::RSpec.configuration.after :suite do
+    @@tunnel.stop if defined? @@tunnel
+  end
   
   ::RSpec.configuration.after :each do
     client_key = TestingBot.get_config[:client_key]
