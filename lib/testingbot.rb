@@ -31,7 +31,7 @@ begin
             params = {
               "session_id" => session_id,
               "status_message" => @execution_error,
-              "success" => !actual_failure?,
+              "success" => !actual_failure? ? 1 : 0,
               "name" => description.to_s,
               "kind" => 2
             }
@@ -55,7 +55,6 @@ begin
   require 'rspec'
   
   ::RSpec.configuration.after :each do
-    
     client_key = TestingBot.get_config[:client_key]
     client_secret = TestingBot.get_config[:client_secret]
     
@@ -91,14 +90,10 @@ begin
         params = {
             "session_id" => session_id,
             "status_message" => status_message,
-            "success" => example.exception.nil?,
+            "success" => example.exception.nil? ? 1 : 0,
             "name" => test_name,
             "kind" => 2
         }
-      
-        if @selenium_driver && @selenium_driver.extra
-          params["extra"] = @selenium_driver.extra
-        end
 
         data = api.update_test(session_id, params)
       end
