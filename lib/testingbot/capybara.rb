@@ -1,6 +1,7 @@
 require 'capybara'
 require 'testingbot/config'
 require 'testingbot/tunnel'
+require 'testingbot/selenium'
 require 'capybara/dsl'
 
 @tunnel = nil
