@@ -5,13 +5,14 @@ require 'rspec'
 @@success = true
 @@check_api = true
 
-::RSpec.configuration.after :each do
-  if @@check_api
-    api = TestingBot::Api.new
-    single_test = api.get_single_test(@selenium_driver.session_id)
-    single_test["success"].should eql(@@success)
-  end
-end
+# disabled until RSpec2 has append_after support
+# ::RSpec.configuration.after :each do
+#   if @@check_api
+#     api = TestingBot::Api.new
+#     single_test = api.get_single_test(@selenium_driver.session_id)
+#     single_test["success"].should eql(@@success)
+#   end
+# end
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
