@@ -10,14 +10,14 @@ module TestingBot
 
     attr_reader :config, :driver
     attr_accessor :session_id_backup
-    
+
     def initialize(options = {})
       @config = TestingBot::get_config
       @config.add_options(options)
 
       http_client = ::Selenium::WebDriver::Remote::Http::Persistent.new
       http_client.timeout = 400
-      @driver = ::Selenium::WebDriver.for(:remote, :url => "http://#{@config[:client_key]}:#{@config[:client_secret]}@#{@config[:host]}:#{@config[:port]}/wd/hub", :desired_capabilities => @config.desired_capabilities, :http_client => http_client)
+      @driver = ::Selenium::WebDriver.for(:remote, :url => "http://#{@config[:client_key]}:#{@config[:client_secret]}@#{@config[:host]}:#{@config[:port]}/wd/hub", :desired_capabilities => @config.desired_capabilities.merge(@config[:options] || {}), :http_client => http_client)
       http_client.timeout = 120
     end
 
@@ -79,6 +79,8 @@ if defined?(Selenium) && defined?(Selenium::Client) && defined?(Selenium::Client
         
         def initialize(*args)
           @config = TestingBot::get_config
+          @options = @config[:options] || {}
+          
           if args[0].kind_of?(Hash)
             options = args[0]
             @platform = options[:platform] || "WINDOWS"
