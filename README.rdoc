@@ -31,10 +31,6 @@ You can find an example in our examples folder, try something like this:
   		:platform => "WINDOWS",
   		:version => 10,
   		:timeout_in_second => 90
-  		
-  		browser.options = {
-  			:screenshot     => true
-  		}
 
   		browser.start_new_browser_session
   	end
