@@ -5,6 +5,10 @@ module TestingBot
     @@config
   end
 
+  def self.reset!
+    @@config = nil
+  end
+
   def self.config
     yield self.get_config
   end
