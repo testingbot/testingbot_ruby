@@ -1,4 +1,4 @@
-{<img src="https://secure.travis-ci.org/testingbot/testingbot_ruby.png" />}[http://travis-ci.org/testingbot/testingbot_ruby
+{<img src="https://secure.travis-ci.org/testingbot/testingbot_ruby.png" />}[http://travis-ci.org/testingbot/testingbot_ruby]
 
 = TestingBot
 
