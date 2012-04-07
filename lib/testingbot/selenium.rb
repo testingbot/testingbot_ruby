@@ -9,7 +9,8 @@ module TestingBot
   class SeleniumWebdriver
 
     attr_reader :config, :driver
-
+    attr_accessor :session_id_backup
+    
     def initialize(options = {})
       @config = TestingBot::get_config
       @config.add_options(options)
@@ -29,6 +30,7 @@ module TestingBot
     end
 
     def stop
+      @session_id_backup = session_id
       @driver.quit
     end
   end
@@ -92,6 +94,10 @@ if defined?(Selenium) && defined?(Selenium::Client) && defined?(Selenium::Client
         def close_current_browser_session
           @session_id_backup = @session_id
           close_current_browser_session_old
+        end
+
+        def session_id
+          @session_id || @session_id_backup || ""
         end
         
         def start_new_browser_session(options={})
