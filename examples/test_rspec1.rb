@@ -22,7 +22,7 @@ describe "People" do
     end
 
     before(:each) do
-      selenium_driver.start_new_browser_session
+      @selenium_driver.start_new_browser_session
     end
 
     append_after(:each) do 
