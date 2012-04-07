@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/testingbot/testingbot_ruby.png)](http://travis-ci.org/testingbot/testingbot_ruby)
+
 = TestingBot
 
 Testingbot.com is a website where you can use our cloud based Selenium grid. Test your web applications in various environments/browsers/devices.
