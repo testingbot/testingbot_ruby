@@ -5,7 +5,7 @@ module TestingBot
     @@config
   end
 
-  def self.reset!
+  def self.reset_config!
     @@config = nil
   end
 
