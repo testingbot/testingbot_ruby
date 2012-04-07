@@ -10,6 +10,7 @@ require 'rspec'
     api = TestingBot::Api.new
     single_test = api.get_single_test(@selenium_driver.session_id)
     single_test["success"].should eql(@@success)
+    single_test["extra"].should eql("just a test")
   end
 end
 
@@ -26,7 +27,7 @@ describe "Selenium RC test" do
         :version => "10"
   end
   before(:each) do
-    @selenium_driver.start_new_browser_session
+    @selenium_driver.start_new_browser_session({ :extra => "just a test" })
   end
 
   after(:each) do
