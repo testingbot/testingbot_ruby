@@ -13,7 +13,7 @@ You can install our testingbot ruby-gem by running "gem install testingbot" on y
 == Setup
 
 After you installed the gem you need to run a one part setup.
-Type testingbot in your commandline and fill in the API key and API secret you obtained on http://www.testingbot.com
+Type testingbot in your commandline and fill in the API key and API secret you obtained on http://testingbot.com
   $ testingbot
 
 == Usage
@@ -149,15 +149,49 @@ This example uses RSpec 2 together with capybara and Selenium webdriver. You can
     end
   end
 
+=== Example RSpec 2, Capybara and Rails
+In this example we will need rspec-rails and Capybara, a rack server will be started by Capybara to run your localhost tests.
+Add the example below in spec/integration/home_spec.rb
+
+  #spec_helper should contain
+
+  require 'capybara/rspec'
+  require 'capybara/rails'
+  require 'testingbot'
+  require 'testingbot/capybara'
+
+  require 'spec_helper'
+
+  TestingBot::config do |config|
+    config[:desired_capabilities] = { :browserName => "firefox", :version => 9, :platform => "WINDOWS", :localhost => "YES" }
+    config.require_tunnel
+  end
+
+  describe 'home page' do
+    before :all do
+      Capybara.server_port = 3011
+      Capybara.current_driver = :testingbot
+      Capybara.app_host = "http://127.0.0.1:3011"
+    end
+
+    it "shows the home page", :type => :request do
+      visit '/'
+      page.should have_content('Selenium')
+    end
+  end
+
 == Capybara and Cucumber
 The examples directory contains an example of testing with Capybara and Cucumber
 More info available on http://testingbot.com/support/getting-started/cucumber.html
 
-== Extra options
-You can specify extra options like enabling/disabling the screenrecording or screenshot feature. (browser.options)
+== Test this gem
+The tests for this gem are located in the spec folder, you can run them with this Rake task: rake spec
 
-There's also an option to pass along extra data with your test, which will be visible on testingbot.com.
-For example a build number, or other custom data. (browser.extra = "")
+== Extra options
+You can specify extra options like enabling/disabling the screenrecording or screenshot feature.
+For WebDriver use the config[:desired_capabilities] to specify extra options.
+
+For RC tests use the start_new_browser_session(options) options hash.
 
 == More information
 
