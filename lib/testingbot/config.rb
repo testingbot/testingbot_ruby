@@ -51,6 +51,10 @@ module TestingBot
     end
 
     def desired_capabilities
+      # check if instance of Selenium::WebDriver::Remote::Capabilities
+      unless @options[:desired_capabilities].instance_of?(Hash)
+        return @options[:desired_capabilities].as_json
+      end
       @options[:desired_capabilities] || default_desired_capabilities
     end
     
