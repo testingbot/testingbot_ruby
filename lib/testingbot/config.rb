@@ -67,7 +67,8 @@ module TestingBot
     def default_options
       {
         :host => "hub.testingbot.com",
-        :port => 4444
+        :port => 4444,
+        :jenkins_output => true
       }
     end
     

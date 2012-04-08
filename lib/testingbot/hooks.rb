@@ -25,7 +25,11 @@ if defined?(Spec) && defined?(Spec::VERSION::MAJOR) && Spec::VERSION::MAJOR == 1
           session_id = @selenium_driver.session_id_backup
         elsif defined?(Capybara)
           begin
-            session_id = page.driver.browser.session_id
+            if page.driver.browser.respond_to?(:session_id)
+              session_id = page.driver.browser.session_id
+            else
+              session_id = page.driver.browser.instance_variable_get("@bridge").instance_variable_get("@session_id")
+            end
           rescue Exception => e
             puts "Could not determine sessionID, can not send results to TestingBot.com #{e.message}"
           end
@@ -42,6 +46,10 @@ if defined?(Spec) && defined?(Spec::VERSION::MAJOR) && Spec::VERSION::MAJOR == 1
           }
 
           data = api.update_test(session_id, params)
+
+          if ENV['JENKINS_HOME'] && (TestingBot.get_config[:jenkins_output] == true)
+            puts "TestingBotSessionID=" + session_id
+          end
         end
       else
           puts "Can't post test results to TestingBot since I could not a .testingbot file in your home-directory."
@@ -90,13 +98,20 @@ begin
         session_id = @selenium_driver.session_id_backup
       elsif defined?(Capybara)
         begin
-          session_id = page.driver.browser.session_id
+          if page.driver.browser.respond_to?(:session_id)
+            session_id = page.driver.browser.session_id
+          else
+            session_id = page.driver.browser.instance_variable_get("@bridge").instance_variable_get("@session_id")
+          end
         rescue Exception => e
           p "Could not determine sessionID, can not send results to TestingBot.com #{e.message}"
         end
       end
       
       if !session_id.nil?
+        if ENV['JENKINS_HOME'] && (TestingBot.get_config[:jenkins_output] == true)
+          puts "TestingBotSessionID=" + session_id
+        end
         api = TestingBot::Api.new
         params = {
             "session_id" => session_id,
@@ -136,6 +151,10 @@ if defined?(Test::Unit::TestCase)
         }
 
         data = api.update_test(session_id, params)
+
+        if ENV['JENKINS_HOME'] && (TestingBot.get_config[:jenkins_output] == true)
+          puts "TestingBotSessionID=" + browser.session_id
+        end
         run_teardown_old
       end
       
