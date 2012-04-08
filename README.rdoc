@@ -152,13 +152,16 @@ This example uses RSpec 2 together with capybara and Selenium webdriver. You can
 === Example RSpec 2, Capybara and Rails
 In this example we will need rspec-rails and Capybara, a rack server will be started by Capybara to run your localhost tests.
 Add the example below in spec/integration/home_spec.rb
-
-  #spec_helper should contain
+  =========================================================
+  spec_helper.rb:
 
   require 'capybara/rspec'
   require 'capybara/rails'
   require 'testingbot'
   require 'testingbot/capybara'
+
+  =========================================================
+  spec/integration/home_spec.rb:
 
   require 'spec_helper'
 
@@ -185,7 +188,8 @@ The examples directory contains an example of testing with Capybara and Cucumber
 More info available on http://testingbot.com/support/getting-started/cucumber.html
 
 == Test this gem
-The tests for this gem are located in the spec folder, you can run them with this Rake task: rake spec
+The tests for this gem are located in the spec folder, you can run them with this Rake task: 
+  rake spec
 
 == Extra options
 You can specify extra options like enabling/disabling the screenrecording or screenshot feature.
