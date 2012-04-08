@@ -19,7 +19,7 @@ browsers.each do |browser|
 		 	end
 
 		 	after :all do
-		 		TestingBot::reset_config!
+		 		TestingBot.reset_config!
 		 		Capybara.current_driver = :testingbot
 		 		page.driver.browser.quit
     			page.driver.instance_variable_set(:@browser, nil)
