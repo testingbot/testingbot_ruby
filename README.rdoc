@@ -184,7 +184,9 @@ Add the example below in spec/integration/home_spec.rb
   end
 
 == Capybara and Cucumber
-The examples directory contains an example of testing with Capybara and Cucumber
+The examples directory contains an example of testing with Capybara and Cucumber.
+The Rakefile in examples/cucumber contains a cucumber task which will run the same Cucumber story on multiple browsers.
+
 More info available on http://testingbot.com/support/getting-started/cucumber.html
 
 == Test this gem
