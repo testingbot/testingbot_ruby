@@ -27,10 +27,15 @@ module TestingBot
 
             main = Process.pid
             at_exit do
-              @browser.quit if @browser
+              if @browser
+                begin
+                  @browser.quit 
+                rescue
+                end
+              end
               if TestingBot.get_config[:require_tunnel]
                 @tunnel.stop unless @tunnel.nil?
-            end
+              end
             end
           end
           @browser
