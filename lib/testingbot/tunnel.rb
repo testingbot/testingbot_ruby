@@ -2,6 +2,8 @@ module TestingBot
   class Tunnel
     TIMEOUT_SECONDS = 70
 
+    @@running = false
+
     attr_reader :options, :config, :process, :available, :connected, :errors
 
     def initialize(opts = {})
@@ -15,6 +17,10 @@ module TestingBot
     end
 
     def start
+      return if @@running == true
+
+      @@running = true
+
       @config.require_tunnel
       
       p "Starting the TestingBot Tunnel" if @options[:verbose] == true
@@ -53,6 +59,7 @@ module TestingBot
 
     def stop
       raise "Can't stop tunnel, it has not been started yet" if @process.nil?
+      @@running = false
       @available = false
       p "Stopping TestingBot Tunnel" if @options[:verbose] == true
       Process.kill("INT", @process.pid)
