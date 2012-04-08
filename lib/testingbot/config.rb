@@ -51,10 +51,14 @@ module TestingBot
     end
 
     def desired_capabilities
-      @options[:desired_capabilities]
+      @options[:desired_capabilities] || default_desired_capabilities
     end
     
     private
+
+    def default_desired_capabilities
+      { :browserName => "firefox", :version => 9, :platform => "WINDOWS" }
+    end
 
     def default_options
       {
