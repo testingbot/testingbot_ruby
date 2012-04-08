@@ -22,10 +22,10 @@ module TestingBot
       @@running = true
 
       @config.require_tunnel
-      
       p "Starting the TestingBot Tunnel" if @options[:verbose] == true
       @process = IO.popen("exec java -jar #{get_jar_path} #{@options[:client_key] || @config[:client_key]} #{@options[:client_secret] || @config[:client_secret]} #{extra_options} 2>&1")
       at_exit do
+        @@running = false
         # make sure we kill the tunnel
         Process.kill("INT", @process.pid) if @available == true
       end
@@ -59,19 +59,24 @@ module TestingBot
 
     def stop
       raise "Can't stop tunnel, it has not been started yet" if @process.nil?
+      p "Stopping TestingBot Tunnel" if @options[:verbose] == true
+
+      kill
+    end
+
+    def kill
       @@running = false
       @available = false
-      p "Stopping TestingBot Tunnel" if @options[:verbose] == true
       Process.kill("INT", @process.pid)
       Process.wait
     end
-
-    private
 
     def extra_options
       extra = @options[:options] || []
       extra.join(" ")
     end
+
+    private
 
     def default_options
       {
