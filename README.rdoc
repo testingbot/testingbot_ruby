@@ -152,7 +152,7 @@ This example uses RSpec 2 together with capybara and Selenium webdriver. You can
 === Example RSpec 2, Capybara and Rails
 In this example we will need rspec-rails and Capybara, a rack server will be started by Capybara to run your localhost tests.
 Add the example below in spec/integration/home_spec.rb
-  =========================================================
+  ----------------------------------------------------------
   spec_helper.rb:
 
   require 'capybara/rspec'
@@ -160,7 +160,7 @@ Add the example below in spec/integration/home_spec.rb
   require 'testingbot'
   require 'testingbot/capybara'
 
-  =========================================================
+  ----------------------------------------------------------
   spec/integration/home_spec.rb:
 
   require 'spec_helper'
