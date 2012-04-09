@@ -1,4 +1,5 @@
 require "rspec"
+require 'selenium/webdriver'
 require File.expand_path(File.dirname(__FILE__) + '/../../lib/testingbot/config.rb')
 
 describe TestingBot::Config do
@@ -39,5 +40,34 @@ describe TestingBot::Config do
   			c[:client_key].should == "pickme"
   		end
   	end
+  end
+
+  describe "config values" do
+    it "should specify a default desired capability if the user did not specify any" do
+      c = TestingBot::Config.new
+      c.desired_capabilities.should_not be_empty
+    end
+
+    it "should be possible to use a Selenium::WebDriver::Remote::Capabilities object for the desired capabilities" do
+      c = TestingBot::Config.new
+      c[:desired_capabilities] = Selenium::WebDriver::Remote::Capabilities.firefox
+      c.desired_capabilities[:browserName].should eql("firefox")
+    end
+  end
+
+  describe "usage" do
+    it "should use the TestingBot.get_config as a singleton" do
+      c = TestingBot.get_config
+      c.should eql(TestingBot.get_config)
+    end
+
+    it "should be possible to reset the configuration" do
+      c = TestingBot.get_config
+      c.add_options({ :randomKey => "lol" })
+
+      TestingBot.reset_config!
+      c = TestingBot.get_config
+      c[:randomKey].should be_nil
+    end
   end
 end

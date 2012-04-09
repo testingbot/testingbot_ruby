@@ -53,12 +53,21 @@ module TestingBot
     def desired_capabilities
       # check if instance of Selenium::WebDriver::Remote::Capabilities
       unless @options[:desired_capabilities].instance_of?(Hash)
-        return @options[:desired_capabilities].as_json
+        return symbolize_keys @options[:desired_capabilities].as_json
       end
-      @options[:desired_capabilities] || default_desired_capabilities
+      @options[:desired_capabilities]
     end
     
     private
+
+    def symbolize_keys(hash)
+      hash.inject({}) {|new_hash, key_value|
+        key, value = key_value
+        value = symbolize_keys(value) if value.is_a?(Hash)
+        new_hash[key.to_sym] = value
+        new_hash
+      }
+    end
 
     def default_desired_capabilities
       { :browserName => "firefox", :version => 9, :platform => "WINDOWS" }
@@ -68,7 +77,8 @@ module TestingBot
       {
         :host => "hub.testingbot.com",
         :port => 4444,
-        :jenkins_output => true
+        :jenkins_output => true,
+        :desired_capabilities => default_desired_capabilities
       }
     end
     
