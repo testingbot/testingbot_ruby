@@ -130,41 +130,65 @@ begin
 rescue LoadError
 end
 
-if defined?(Test::Unit::TestCase)
-  module TestingBot
-    class TestingBot::TestCase < Test::Unit::TestCase
-      
-      attr_accessor :exception
-      
-      def run_teardown
-        client_key = TestingBot.get_config[:client_key]
-        client_secret = TestingBot.get_config[:client_secret]
-        
-        api = TestingBot::Api.new
-        params = {
-            "session_id" => browser.session_id,
-            "status_message" => @exception,
-            "success" => passed?,
-            "name" => self.to_s,
-            "kind" => 2,
-            "extra" => browser.extra
-        }
-
-        data = api.update_test(session_id, params)
-
-        if ENV['JENKINS_HOME'] && (TestingBot.get_config[:jenkins_output] == true)
-          puts "TestingBotSessionID=" + browser.session_id
+module TestingBot
+  module SeleniumForTestUnit
+    attr_accessor :exception
+    attr_reader :browser
+    
+    def run(*args, &blk)
+      if TestingBot.get_config.desired_capabilities.instance_of?(Array)
+        TestingBot.get_config.desired_capabilities.each do |browser|
+          @browser = ::Selenium::Client::Driver.new(:browser => browser[:browserName], :url => TestingBot.get_config[:browserUrl])
+          @browser.start_new_browser_session(browser)
+          super(*args, &blk)
+          @browser.stop
         end
-        run_teardown_old
+      else
+        super(*args, &blk)
       end
-      
-      def handle_exception(e)
-        @exception = e.to_s
-        handle_exception_old(e)
+    end
+
+    def teardown
+      api = TestingBot::Api.new
+      params = {
+          "session_id" => browser.session_id,
+          "status_message" => @exception || "",
+          "success" => passed? ? 1 : 0,
+          "name" => self.to_s,
+          "kind" => 2
+      }
+
+      data = api.update_test(browser.session_id, params)
+
+      if ENV['JENKINS_HOME'] && (TestingBot.get_config[:jenkins_output] == true)
+        puts "TestingBotSessionID=" + browser.session_id
       end
-      
-      alias :run_teardown_old :run_teardown
-      alias :handle_exception_old :handle_exception
+      super
+    end
+    
+    def handle_exception(e)
+      @exception = e.to_s
+      handle_exception_old(e)
+    end
+
+    alias :handle_exception_old :handle_exception
+  end
+end
+
+begin
+  require 'test/unit/testcase'
+  module TestingBot
+    class TestCase < Test::Unit::TestCase
+      include SeleniumForTestUnit
+    end
+  end
+rescue LoadError
+end
+
+if defined?(ActiveSupport::TestCase)
+  module TestingBot
+    class RailsTestCase < ::ActiveSupport::TestCase
+      include SeleniumForTestUnit
     end
   end
 end
