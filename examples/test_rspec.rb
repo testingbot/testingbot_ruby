@@ -4,31 +4,14 @@ require 'rspec'
 require 'testingbot'
 require 'testingbot/tunnel'
 
-# rspec 2
-describe "People", :type => :selenium do
-  attr_reader :selenium_driver
-    before(:all) do
-      # tunnel = TestingBot::Tunnel.new
-      # tunnel.start
+TestingBot::config do |config|
+  config[:desired_capabilities] = [{ :browserName => "firefox", :version => 9, :platform => "WINDOWS" }, { :browserName => "firefox", :version => 11, :platform => "WINDOWS" }]
+end
 
-      @selenium_driver = Selenium::Client::Driver.new \
-          :browser => "firefox", 
-          :url => "http://www.google.com", 
-          :timeout_in_second => 60,
-          :platform => "WINDOWS",
-          :version => "10"
-    end
-  
-    before(:each) do
-      @selenium_driver.start_new_browser_session
-    end
-  
-    after(:each) do
-      @selenium_driver.close_current_browser_session
-    end
-      
+# rspec 2
+describe "People", :type => :selenium, :multibrowser => true do
     it "can find the right title" do    
-      @selenium_driver.open "/"
-      @selenium_driver.title.should eql("Google")   
+      page.navigate.to "http://www.google.com"
+      page.title.should eql("Google")   
     end
 end
