@@ -12,12 +12,12 @@ module TestingBot
     attr_accessor :session_id_backup
 
     def initialize(options = {})
-      @config = TestingBot::get_config
-      @config.add_options(options)
+      @options = TestingBot::get_config.options
+      @options = @options.merge(options)
 
       http_client = ::Selenium::WebDriver::Remote::Http::Persistent.new
       http_client.timeout = 400
-      @driver = ::Selenium::WebDriver.for(:remote, :url => "http://#{@config[:client_key]}:#{@config[:client_secret]}@#{@config[:host]}:#{@config[:port]}/wd/hub", :desired_capabilities => @config.desired_capabilities.merge(@config[:options] || {}), :http_client => http_client)
+      @driver = ::Selenium::WebDriver.for(:remote, :url => "http://#{@options[:client_key]}:#{@options[:client_secret]}@#{@options[:host]}:#{@options[:port]}/wd/hub", :desired_capabilities => @options[:desired_capabilities], :http_client => http_client)
       http_client.timeout = 120
     end
 
