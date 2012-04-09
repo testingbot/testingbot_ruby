@@ -71,26 +71,26 @@ begin
 
   module TestingBot
     module RSpecInclude
-      attr_reader :browser
-      alias_method :page, :browser
+      attr_reader :selenium_driver
+      alias_method :page, :selenium_driver
 
       def self.included(base)
         base.around do |test|
           if TestingBot.get_config.desired_capabilities.instance_of?(Array)
             TestingBot.get_config.desired_capabilities.each do |browser|
-              @browser = TestingBot::SeleniumWebdriver.new({ :desired_capabilities => browser })
+              @selenium_driver = TestingBot::SeleniumWebdriver.new({ :desired_capabilities => browser })
               begin
                 test.run
               ensure
-                @browser.stop
+                @selenium_driver.stop
               end
             end
           else
-            @browser = TestingBot::SeleniumWebdriver.new({ :desired_capabilities => TestingBot.get_config.desired_capabilities })
+            @selenium_driver = TestingBot::SeleniumWebdriver.new({ :desired_capabilities => TestingBot.get_config.desired_capabilities })
             begin
               test.run
             ensure
-              @browser.stop
+              @selenium_driver.stop
             end
           end
         end
@@ -98,28 +98,28 @@ begin
     end  
 
     module RSpecIncludeLegacy
-      attr_reader :browser
-      alias_method :page, :browser
+      attr_reader :selenium_driver
+      alias_method :page, :selenium_driver
 
       def self.included(base)
         base.around do |test|
           if TestingBot.get_config.desired_capabilities.instance_of?(Array)
             TestingBot.get_config.desired_capabilities.each do |browser|
-              @browser = ::Selenium::Client::Driver.new(:browser => browser[:browserName], :url => TestingBot.get_config[:browserUrl])
-              @browser.start_new_browser_session(browser)
+              @selenium_driver = ::Selenium::Client::Driver.new(:browser => browser[:browserName], :url => TestingBot.get_config[:browserUrl])
+              @selenium_driver.start_new_browser_session(browser)
               begin
                 test.run
               ensure
-                @browser.stop
+                @selenium_driver.stop
               end
             end
           else
-            @browser = ::Selenium::Client::Driver.new(:browser => browser[:browserName], :url => TestingBot.get_config[:browserUrl])
-            @browser.start_new_browser_session(TestingBot.get_config.desired_capabilities)
+            @selenium_driver = ::Selenium::Client::Driver.new(:browser => browser[:browserName], :url => TestingBot.get_config[:browserUrl])
+            @selenium_driver.start_new_browser_session(TestingBot.get_config.desired_capabilities)
             begin
               test.run
             ensure
-              @browser.stop
+              @selenium_driver.stop
             end
           end
         end
@@ -154,10 +154,10 @@ begin
       status_message = example.exception.to_s if !example.exception.nil?
       
       session_id = nil
-      
+
       if !@selenium_driver.nil?
-        session_id = @selenium_driver.session_id_backup
-      elsif defined?(Capybara)
+        session_id = @selenium_driver.session_id
+      elsif defined? page
         begin
           if page.driver.browser.respond_to?(:session_id)
             session_id = page.driver.browser.session_id
