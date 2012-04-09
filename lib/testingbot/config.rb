@@ -36,6 +36,10 @@ module TestingBot
       @options[key] = value
     end
 
+    def options
+      @options
+    end
+
     def require_tunnel(host = "127.0.0.1", port = 4445)
       @options[:require_tunnel] = true
       @options[:host] = host
@@ -52,7 +56,7 @@ module TestingBot
 
     def desired_capabilities
       # check if instance of Selenium::WebDriver::Remote::Capabilities
-      unless @options[:desired_capabilities].instance_of?(Hash)
+      unless @options[:desired_capabilities].instance_of?(Hash) || @options[:desired_capabilities].instance_of?(Array)
         return symbolize_keys @options[:desired_capabilities].as_json
       end
       @options[:desired_capabilities]
