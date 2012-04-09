@@ -69,6 +69,67 @@ begin
     end
   end
 
+  module TestingBot
+    module RSpecInclude
+      attr_reader :browser
+      alias_method :page, :browser
+
+      def self.included(base)
+        base.around do |test|
+          if TestingBot.get_config.desired_capabilities.instance_of?(Array)
+            TestingBot.get_config.desired_capabilities.each do |browser|
+              @browser = TestingBot::SeleniumWebdriver.new({ :desired_capabilities => browser })
+              begin
+                test.run
+              ensure
+                @browser.stop
+              end
+            end
+          else
+            @browser = TestingBot::SeleniumWebdriver.new({ :desired_capabilities => TestingBot.get_config.desired_capabilities })
+            begin
+              test.run
+            ensure
+              @browser.stop
+            end
+          end
+        end
+      end
+    end  
+
+    module RSpecIncludeLegacy
+      attr_reader :browser
+      alias_method :page, :browser
+
+      def self.included(base)
+        base.around do |test|
+          if TestingBot.get_config.desired_capabilities.instance_of?(Array)
+            TestingBot.get_config.desired_capabilities.each do |browser|
+              @browser = ::Selenium::Client::Driver.new(:browser => browser[:browserName], :url => TestingBot.get_config[:browserUrl])
+              @browser.start_new_browser_session(browser)
+              begin
+                test.run
+              ensure
+                @browser.stop
+              end
+            end
+          else
+            @browser = ::Selenium::Client::Driver.new(:browser => browser[:browserName], :url => TestingBot.get_config[:browserUrl])
+            @browser.start_new_browser_session(TestingBot.get_config.desired_capabilities)
+            begin
+              test.run
+            ensure
+              @browser.stop
+            end
+          end
+        end
+      end
+    end  
+  end
+
+  ::RSpec.configuration.include(TestingBot::RSpecIncludeLegacy, :multibrowserRC => true)
+  ::RSpec.configuration.include(TestingBot::RSpecInclude, :multibrowser => true)
+
   ::RSpec.configuration.after :suite do
     @@tunnel.stop if defined? @@tunnel
   end
