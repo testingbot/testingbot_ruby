@@ -22,6 +22,7 @@ Type testingbot in your commandline and fill in the API key and API secret you o
 You can find an example in our examples folder, try something like this:
 
   require "rubygems"
+  require "test/unit"
   require "testingbot"
   class ExampleTest < TestingBot::TestCase
   	attr_reader :browser
@@ -138,7 +139,7 @@ This example uses RSpec 2 together with capybara and Selenium webdriver. You can
   end
 
   describe "People", :type => :request do
-    before :all do
+    before :each do
       Capybara.current_driver = :testingbot
       Capybara.app_host = "http://testingbot.com"
     end
@@ -171,7 +172,7 @@ Add the example below in spec/integration/home_spec.rb
   end
 
   describe 'home page' do
-    before :all do
+    before :each do
       Capybara.server_port = 3011
       Capybara.current_driver = :testingbot
       Capybara.app_host = "http://127.0.0.1:3011"
