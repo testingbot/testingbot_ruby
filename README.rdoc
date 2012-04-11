@@ -178,6 +178,12 @@ Add the example below in spec/integration/home_spec.rb
       Capybara.app_host = "http://127.0.0.1:3011"
     end
 
+    after :each do
+      # this is a workaround to push test status/details back to testingbot
+      # we need to use this because capybara overwrites the driver with a rack-test driver
+      @selenium_driver = page.driver.browser.send(:bridge)
+    end
+
     it "shows the home page", :type => :request do
       visit '/'
       page.should have_content('Selenium')
@@ -186,6 +192,7 @@ Add the example below in spec/integration/home_spec.rb
 
 === Example RSpec 2 run on multiple browsers
 Use the :multibrowser => true statement to indicate you want to test on multiple browsers.
+This currently does not yet work together with Capybara.
 
   require 'rubygems'
   require "selenium/client"
