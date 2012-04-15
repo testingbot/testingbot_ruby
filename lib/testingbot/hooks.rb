@@ -167,6 +167,10 @@ begin
         rescue Exception => e
           p "Could not determine sessionID, can not send results to TestingBot.com #{e.message}"
         end
+
+        if session_id.nil? || session_id.blank?
+          session_id = page.driver.browser.send(:bridge).session_id
+        end
       end
       
       if !session_id.nil?
