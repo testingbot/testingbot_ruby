@@ -168,7 +168,7 @@ begin
           p "Could not determine sessionID, can not send results to TestingBot.com #{e.message}"
         end
 
-        if session_id.nil? || session_id.blank?
+        if session_id.nil? || session_id.empty?
           session_id = page.driver.browser.send(:bridge).session_id
         end
       end
