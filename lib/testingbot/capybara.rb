@@ -17,13 +17,18 @@ module TestingBot
     end
 
     class CustomDriver < ::Capybara::Selenium::Driver
+
+        def session_id
+          @browser.session_id
+        end
+
         def browser
           unless @browser
             if TestingBot.get_config[:require_tunnel]
               TestingBot::Capybara.start_tunnel
             end
 
-            @browser = TestingBot::SeleniumWebdriver.new
+            @browser = TestingBot::SeleniumWebdriver.new(@options || {})
 
             main = Process.pid
             at_exit do
@@ -40,6 +45,18 @@ module TestingBot
           end
           @browser
         end
+    end
+  end
+end
+
+module Capybara
+  class Session
+    def stop
+      driver.quit
+    end
+
+    def session_id
+      driver.session_id
     end
   end
 end

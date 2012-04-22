@@ -78,7 +78,17 @@ begin
         base.around do |test|
           if TestingBot.get_config.desired_capabilities.instance_of?(Array)
             TestingBot.get_config.desired_capabilities.each do |browser|
-              @selenium_driver = TestingBot::SeleniumWebdriver.new({ :desired_capabilities => browser })
+
+              if defined?(Capybara)
+                ::Capybara.register_driver :multibrowser do |app|
+                  TestingBot::Capybara::CustomDriver.new(app, { :desired_capabilities => browser })
+                end
+
+                @selenium_driver = ::Capybara::Session.new(:multibrowser)
+              else
+                @selenium_driver = TestingBot::SeleniumWebdriver.new({ :desired_capabilities => browser })
+              end
+
               begin
                 test.run
               ensure
@@ -86,7 +96,11 @@ begin
               end
             end
           else
-            @selenium_driver = TestingBot::SeleniumWebdriver.new({ :desired_capabilities => TestingBot.get_config.desired_capabilities })
+            if defined?(Capybara)
+              @selenium_driver = ::Capybara::Session.new(:testingbot)
+            else
+              @selenium_driver = TestingBot::SeleniumWebdriver.new({ :desired_capabilities => TestingBot.get_config.desired_capabilities })
+            end
             begin
               test.run
             ensure
