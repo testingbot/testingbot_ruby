@@ -183,7 +183,10 @@ begin
         end
 
         if session_id.nil? || session_id.empty?
-          session_id = page.driver.browser.send(:bridge).session_id
+          begin
+            session_id = page.driver.browser.send(:bridge).session_id
+          rescue
+          end
         end
       end
       
