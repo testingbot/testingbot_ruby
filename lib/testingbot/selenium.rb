@@ -16,6 +16,10 @@ module TestingBot
       @options = @options.merge(options)
 
       http_client = ::Selenium::WebDriver::Remote::Http::Persistent.new
+      if ENV['TESTINGBOT_CLIENT_PROXY']
+        require 'ostruct'
+        http_client.proxy = OpenStruct.new(:http => ENV['TESTINGBOT_CLIENT_PROXY'])
+      end
       http_client.timeout = 400
       @driver = ::Selenium::WebDriver.for(:remote, :url => "http://#{@options[:client_key]}:#{@options[:client_secret]}@#{@options[:host]}:#{@options[:port]}/wd/hub", :desired_capabilities => @options[:desired_capabilities], :http_client => http_client)
       http_client.timeout = 120
