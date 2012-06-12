@@ -53,7 +53,7 @@ module TestingBot
       uri = URI(API_URL + '/v' + VERSION.to_s + url)
       req = Net::HTTP::Get.new(uri.request_uri)
       req.basic_auth @config[:client_key], @config[:client_secret]
-      res = Net::HTTP.start(uri.hostname, uri.port) {|http|
+      res = Net::HTTP.start(uri.host, uri.port) {|http|
         http.request(req)
       }
 
@@ -71,7 +71,7 @@ module TestingBot
       req = Net::HTTP::Put.new(uri.request_uri)
       req.basic_auth @config[:client_key], @config[:client_secret]
       req.set_form_data(params)
-      res = Net::HTTP.start(uri.hostname, uri.port) {|http|
+      res = Net::HTTP.start(uri.host, uri.port) {|http|
         http.request(req)
       }
 
@@ -89,7 +89,7 @@ module TestingBot
       req = Net::HTTP::Delete.new(uri.request_uri)
       req.basic_auth @config[:client_key], @config[:client_secret]
       req.set_form_data(params)
-      res = Net::HTTP.start(uri.hostname, uri.port) {|http|
+      res = Net::HTTP.start(uri.host, uri.port) {|http|
         http.request(req)
       }
 
