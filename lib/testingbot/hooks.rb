@@ -218,6 +218,7 @@ module TestingBot
     attr_reader :browser
     
     def run(*args, &blk)
+      return if @method_name.to_s == "default_test"
       if TestingBot.get_config.desired_capabilities.instance_of?(Array)
         TestingBot.get_config.desired_capabilities.each do |browser|
           @browser = ::Selenium::Client::Driver.new(:browser => browser[:browserName], :url => TestingBot.get_config[:browserUrl])
@@ -262,7 +263,6 @@ begin
   require 'test/unit/testcase'
   module TestingBot
     class TestCase < Test::Unit::TestCase
-      undef_method :default_test
       include SeleniumForTestUnit
     end
   end
