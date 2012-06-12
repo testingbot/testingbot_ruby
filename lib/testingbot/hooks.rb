@@ -231,19 +231,20 @@ module TestingBot
     end
 
     def teardown
+      return super if @browser.nil?
       api = TestingBot::Api.new
       params = {
-          "session_id" => browser.session_id,
+          "session_id" => @browser.session_id,
           "status_message" => @exception || "",
           "success" => passed? ? 1 : 0,
           "name" => self.to_s,
           "kind" => 2
       }
 
-      data = api.update_test(browser.session_id, params)
+      data = api.update_test(@browser.session_id, params)
 
       if ENV['JENKINS_HOME'] && (TestingBot.get_config[:jenkins_output] == true)
-        puts "TestingBotSessionID=" + browser.session_id
+        puts "TestingBotSessionID=" + @browser.session_id
       end
       super
     end
@@ -261,6 +262,7 @@ begin
   require 'test/unit/testcase'
   module TestingBot
     class TestCase < Test::Unit::TestCase
+      undef_method :default_test
       include SeleniumForTestUnit
     end
   end
