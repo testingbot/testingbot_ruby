@@ -45,14 +45,17 @@ if defined?(Spec) && defined?(Spec::VERSION::MAJOR) && Spec::VERSION::MAJOR == 1
             "kind" => 2
           }
 
-          data = api.update_test(session_id, params)
-
+          begin
+            data = api.update_test(session_id, params)
+          rescue
+          end
+          
           if ENV['JENKINS_HOME'] && (TestingBot.get_config[:jenkins_output] == true)
             puts "TestingBotSessionID=" + session_id
           end
         end
       else
-          puts "Can't post test results to TestingBot since I could not a .testingbot file in your home-directory."
+          puts "Can't post test results to TestingBot since I could not find a .testingbot file in your home-directory."
       end
     end
   end
@@ -203,10 +206,13 @@ begin
             "kind" => 2
         }
 
-        data = api.update_test(session_id, params)
+        begin
+          data = api.update_test(session_id, params)
+        rescue
+        end
       end
     else
-      puts "Can't post test results to TestingBot since I could not a .testingbot file in your home-directory."
+      puts "Can't post test results to TestingBot since I could not find a .testingbot file in your home-directory."
     end
   end
 rescue LoadError
@@ -242,7 +248,10 @@ module TestingBot
           "kind" => 2
       }
 
-      data = api.update_test(@browser.session_id, params)
+      begin
+        data = api.update_test(@browser.session_id, params)
+      rescue
+      end
 
       if ENV['JENKINS_HOME'] && (TestingBot.get_config[:jenkins_output] == true)
         puts "TestingBotSessionID=" + @browser.session_id
