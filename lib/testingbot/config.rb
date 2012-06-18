@@ -89,7 +89,14 @@ module TestingBot
     def load_config_file
       options = {}
       
-      is_windows = (RUBY_PLATFORM =~ /w.*32/)
+      is_windows = false
+
+      begin
+        require 'rbconfig'
+        is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
+      rescue
+        is_windows = (RUBY_PLATFORM =~ /w.*32/) || (ENV["OS"] && ENV["OS"] == "Windows_NT")
+      end
       
       if is_windows
         config_file = "#{ENV['HOMEDRIVE']}\\.testingbot"
