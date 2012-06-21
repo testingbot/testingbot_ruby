@@ -47,8 +47,9 @@ if defined?(Selenium) && defined?(Selenium::Client) && defined?(Selenium::Client
       module Protocol
           # add custom parameters for testingbot.com
           def http_request_for_testingbot(verb, args)
+            raise "Please specify your key and secret in a ~/.testingbot or C:\\.testingbot file" if TestingBot.get_config[:client_key].nil?
             data = http_request_for_original(verb, args)
-            data << "&client_key=#{TestingBot.get_config[:client_key]}&client_secret=#{TestingBot.get_config[:client_secret]}" unless TestingBot.get_config[:client_key].nil?
+            data << "&client_key=#{TestingBot.get_config[:client_key]}&client_secret=#{TestingBot.get_config[:client_secret]}"
           end
 
           begin
