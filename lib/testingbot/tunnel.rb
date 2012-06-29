@@ -1,6 +1,6 @@
 module TestingBot
   class Tunnel
-    TIMEOUT_SECONDS = 70
+    TIMEOUT_SECONDS = 140
 
     @@running = false
 
