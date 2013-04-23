@@ -26,7 +26,7 @@ module TestingBot
     end
 
     def get_tests(offset = 0, count = 10)
-      get("/tests")
+      get("/tests?offset=#{offset}&count=#{count}")
     end
 
     def get_single_test(test_id)
