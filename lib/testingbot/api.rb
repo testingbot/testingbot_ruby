@@ -4,7 +4,7 @@ module TestingBot
   class Api
 
     VERSION = 1
-    API_URL = "http://api.testingbot.com"
+    API_URL = "https://api.testingbot.com"
 
     attr_reader :config
 
