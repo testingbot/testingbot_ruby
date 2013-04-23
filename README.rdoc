@@ -233,5 +233,5 @@ Get more information on http://testingbot.com
 
 == Copyright
 
-Copyright (c) 2012 TestingBot
+Copyright (c) TestingBot
 Please see our LICENSE
