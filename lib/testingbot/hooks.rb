@@ -41,8 +41,7 @@ if defined?(Spec) && defined?(Spec::VERSION::MAJOR) && Spec::VERSION::MAJOR == 1
             "session_id" => session_id,
             "status_message" => @execution_error,
             "success" => !actual_failure? ? 1 : 0,
-            "name" => description.to_s,
-            "kind" => 2
+            "name" => description.to_s
           }
 
           begin
@@ -202,8 +201,7 @@ begin
             "session_id" => session_id,
             "status_message" => status_message,
             "success" => example.exception.nil? ? 1 : 0,
-            "name" => test_name,
-            "kind" => 2
+            "name" => test_name
         }
 
         begin
@@ -244,8 +242,7 @@ module TestingBot
           "session_id" => @browser.session_id,
           "status_message" => @exception || "",
           "success" => passed? ? 1 : 0,
-          "name" => self.to_s,
-          "kind" => 2
+          "name" => self.to_s
       }
 
       begin
@@ -261,7 +258,7 @@ module TestingBot
     
     def handle_exception(e)
       @exception = e.to_s
-      handle_exception_old(e)
+      problem_occurred
     end
 
     alias :handle_exception_old :handle_exception
