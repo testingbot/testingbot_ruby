@@ -1,5 +1,1 @@
-require "testingbot/version"
-require "testingbot/config"
-require "testingbot/selenium"
 require "testingbot/api"
-require "testingbot/hooks"

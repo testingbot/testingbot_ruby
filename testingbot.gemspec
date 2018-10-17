@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = Testingbot::VERSION
   s.authors     = ["Jochen Delabie"]
   s.email       = ["info@testingbot.com"]
-  s.homepage    = "http://www.testingbot.com"
-  s.summary     = "Ruby Gem to be used with testingbot.com"
-  s.description = "This gem makes using our Selenium grid on testingbot.com easy"
+  s.homepage    = "https://testingbot.com"
+  s.summary     = "Ruby API Gem to be used with testingbot.com"
+  s.description = "This gem makes interacting with the TestingBot API easy with Ruby"
 
   s.rubyforge_project = "testingbot"
 

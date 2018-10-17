@@ -3,5 +3,4 @@ rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.1
-before_script: echo "travis:rocks" > ~/.testingbot
-script: bundle exec rspec -P "spec/unit/*.rb"
+script: bundle exec rake spec
