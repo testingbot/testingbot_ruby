@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/testingbot/testingbot_ruby.png)](https://travis-ci.org/testingbot/testingbot_ruby)
+[![Gem Version](https://badge.fury.io/rb/testingbot.svg)](https://badge.fury.io/rb/testingbot)
 
 # Testingbot-Ruby
 
