@@ -1,4 +1,6 @@
 require 'json'
+require "rest-client"
+
 module TestingBot
 
   class Api
@@ -17,6 +19,11 @@ module TestingBot
       if @key.nil? || @secret.nil?
         cached_credentials = load_config_file
         @key, @secret = cached_credentials unless cached_credentials.nil?
+      end
+
+      if @key.nil? || @secret.nil?
+        @key = ENV["TESTINGBOT_KEY"] if ENV["TESTINGBOT_KEY"]
+        @secret = ENV["TESTINGBOT_SECRET"] if ENV["TESTINGBOT_SECRET"]
       end
 
       if @key.nil? || @secret.nil?
@@ -88,6 +95,28 @@ module TestingBot
       Digest::MD5.hexdigest("#{@key}:#{@secret}:#{identifier}")
     end
 
+    def upload_local_file(file_path)
+      response = RestClient::Request.execute(
+        method: :post,
+        url: API_URL + "/v1/storage",
+        user: @key,
+        password: @secret,
+        timeout: 600,
+        payload: {
+          multipart: true,
+          file: File.new(file_path, 'rb')
+        }
+      )
+      parsed = JSON.parse(response.body)
+      parsed
+    end
+
+    def upload_remote_file(url)
+      post("/storage/", {
+        :url => url
+      })
+    end
+
     private
 
     def load_config_file
@@ -115,34 +144,26 @@ module TestingBot
     end
 
     def get(url)
-      uri = URI(API_URL + '/v' + VERSION.to_s + url)
-      req = Net::HTTP::Get.new(uri.request_uri)
-      req.basic_auth @key, @secret
-      res = Net::HTTP.start(uri.host, uri.port, :use_ssl => true) {|http|
-        http.request(req)
-      }
+      uri = API_URL + '/v' + VERSION.to_s + url
 
-      parsed = JSON.parse(res.body)
+      response = RestClient::Request.execute method: :get, url: uri, user: @key, password: @secret
+      parsed = JSON.parse(response.body)
+
       p parsed if @options[:debug]
-      
       if !parsed.is_a?(Array) && !parsed["error"].nil? && !parsed["error"].empty?
         raise parsed["error"]
       end
+
       parsed
     end
 
     def put(url, params = {})
-      uri = URI(API_URL + '/v' + VERSION.to_s + url)
-      req = Net::HTTP::Put.new(uri.request_uri)
-      req.basic_auth @key, @secret
-      req.set_form_data(params)
-      res = Net::HTTP.start(uri.host, uri.port, :use_ssl => true) {|http|
-        http.request(req)
-      }
+      uri = API_URL + '/v' + VERSION.to_s + url
 
-      parsed = JSON.parse(res.body)
+      response = RestClient::Request.execute method: :put, url: uri, payload: params, user: @key, password: @secret
+      parsed = JSON.parse(response.body)
+
       p parsed if @options[:debug]
-
       if !parsed.is_a?(Array) && !parsed["error"].nil? && !parsed["error"].empty?
         raise parsed["error"]
       end
@@ -151,18 +172,11 @@ module TestingBot
     end
 
     def delete(url, params = {})
-      uri = URI(API_URL + '/v' + VERSION.to_s + url)
-      req = Net::HTTP::Delete.new(uri.request_uri)
-      req.basic_auth @key, @secret
-      req.set_form_data(params)
-      res = Net::HTTP.start(uri.host, uri.port, :use_ssl => true) {|http|
-        http.request(req)
-      }
-
-      parsed = JSON.parse(res.body)
+      uri = API_URL + '/v' + VERSION.to_s + url
+      response = RestClient::Request.execute method: :delete, url: uri, payload: params, user: @key, password: @secret
+      parsed = JSON.parse(response.body)
 
       p parsed if @options[:debug]
-
       if !parsed.is_a?(Array) && !parsed["error"].nil? && !parsed["error"].empty?
         raise parsed["error"]
       end
@@ -171,15 +185,12 @@ module TestingBot
     end
 
     def post(url, params = {})
-      url = URI.parse(API_URL + '/v' + VERSION + url)
-      http = Net::HTTP.new(url.host, url.port)
-      http.use_ssl = true
-      http.basic_auth @key, @secret
-      res = http.post(url.path, params.map { |k, v| "#{k.to_s}=#{v}" }.join("&"))
-      parsed = JSON.parse(res.body)
+      uri = API_URL + '/v' + VERSION.to_s + url
+
+      response = RestClient::Request.execute method: :post, url: uri, payload: params, user: @key, password: @secret
+      parsed = JSON.parse(response.body)
 
       p parsed if @options[:debug]
-
       if !parsed.is_a?(Array) && !parsed["error"].nil? && !parsed["error"].empty?
         raise parsed["error"]
       end

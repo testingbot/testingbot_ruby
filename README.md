@@ -121,6 +121,20 @@ Gets a list of active tunnels for your account.
 @api.get_tunnels
 ```
 
+### upload_local_file
+Uploads a local file (APK or IPA file) to TestingBot Storage for Mobile App Testing.
+
+```ruby
+@api.upload_local_file(localFilePath)
+```
+
+### upload_remote_file
+Uploads a remote file (APK or IPA URL) to TestingBot Storage for Mobile App Testing.
+
+```ruby
+@api.upload_remote_file(remoteFileUrl)
+```
+
 ### get_authentication_hash
 Calculates the hash necessary to share tests with other people
 

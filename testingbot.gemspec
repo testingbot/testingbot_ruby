@@ -2,24 +2,26 @@
 $:.push File.expand_path("../lib", __FILE__)
 require "testingbot/version"
 
-Gem::Specification.new do |s|
-  s.name        = "testingbot"
-  s.version     = Testingbot::VERSION
-  s.authors     = ["Jochen Delabie"]
-  s.email       = ["info@testingbot.com"]
-  s.homepage    = "https://testingbot.com"
-  s.summary     = "Ruby API Gem to be used with testingbot.com"
-  s.description = "This gem makes interacting with the TestingBot API easy with Ruby"
+Gem::Specification.new do |gem|
+  gem.name        = "testingbot"
+  gem.version     = Testingbot::VERSION
+  gem.authors     = ["Jochen Delabie"]
+  gem.email       = ["info@testingbot.com"]
+  gem.homepage    = "https://testingbot.com"
+  gem.summary     = "Ruby API Gem to be used with testingbot.com"
+  gem.description = "This gem makes interacting with the TestingBot API easy with Ruby"
 
-  s.rubyforge_project = "testingbot"
+  gem.rubyforge_project = "testingbot"
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  s.require_paths = ["lib"]
-  s.add_dependency "json"
-  s.add_dependency "net-http-persistent"
-  s.add_dependency "selenium-webdriver"
-  s.add_development_dependency "rspec", [">= 2.9.0"]
-  s.add_development_dependency "rake"
+  gem.files         = `git ls-files`.split($/).reject { |e| /spec/.match e }
+  gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  gem.require_paths = ["lib"]
+
+  gem.license = 'MIT'
+  
+  gem.add_runtime_dependency 'rest-client', '~> 2.0'
+  gem.add_runtime_dependency 'json'
+  gem.add_development_dependency "rspec", '~> 3.3'
+  gem.add_development_dependency "rake"
 end
