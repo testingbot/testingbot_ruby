@@ -117,6 +117,19 @@ module TestingBot
       })
     end
 
+    def get_uploaded_files(offset = 0, count = 10)
+      get("/storage?offset=#{offset}&count=#{count}")
+    end
+
+    def get_uploaded_file(app_url)
+      get("/storage/#{app_url.gsub(/tb:\/\//, '')}")
+    end
+
+    def delete_uploaded_file(app_url)
+      response = delete("/storage/#{app_url.gsub(/tb:\/\//, '')}")
+      response["success"]
+    end
+
     private
 
     def load_config_file

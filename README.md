@@ -135,6 +135,26 @@ Uploads a remote file (APK or IPA URL) to TestingBot Storage for Mobile App Test
 @api.upload_remote_file(remoteFileUrl)
 ```
 
+### get_uploaded_files
+Retrieves files previously uploaded TestingBot Storage for Mobile App Testing.
+
+```ruby
+@api.get_uploaded_files(offset = 0, count = 30)
+```
+
+### get_uploaded_file
+Retrieves meta-data for a file previously uploaded to TestingBot Storage.
+
+```ruby
+@api.get_uploaded_file(app_url)
+```
+
+### upload_remote_file
+Uploads a remote file (APK or IPA URL) to TestingBot Storage for Mobile App Testing.
+
+```ruby
+@api.upload_remote_file(remoteFileUrl)
+```
 ### get_authentication_hash
 Calculates the hash necessary to share tests with other people
 
