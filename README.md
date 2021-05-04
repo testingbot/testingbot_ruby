@@ -50,6 +50,20 @@ Gets a list of browsers you can test on
 @api.get_browsers
 ```
 
+### get_devices
+Gets a list of (physical) devices you can test on
+
+```ruby
+@api.get_devices
+```
+
+### get_available_devices
+Gets a list of available (physical) devices you can test on
+
+```ruby
+@api.get_available_devices
+```
+
 ### get_user_info
 Gets your user information
 
@@ -114,11 +128,25 @@ Gets a build from TestingBot
 @api.get_build(build_identifier)
 ```
 
+### delete_build
+Deletes a build from TestingBot
+
+```ruby
+@api.delete_build(build_identifier)
+```
+
 ### get_tunnels
 Gets a list of active tunnels for your account.
 
 ```ruby
 @api.get_tunnels
+```
+
+### delete_tunnel
+Deletes an active tunnel.
+
+```ruby
+@api.delete_tunnel(tunnel_identifier)
 ```
 
 ### upload_local_file
@@ -149,12 +177,20 @@ Retrieves meta-data for a file previously uploaded to TestingBot Storage.
 @api.get_uploaded_file(app_url)
 ```
 
+### delete_uploaded_file
+Deletes a previously uploaded file
+
+```ruby
+@api.delete_uploaded_file(remoteFileUrl)
+```
+
 ### upload_remote_file
 Uploads a remote file (APK or IPA URL) to TestingBot Storage for Mobile App Testing.
 
 ```ruby
 @api.upload_remote_file(remoteFileUrl)
 ```
+
 ### get_authentication_hash
 Calculates the hash necessary to share tests with other people
 

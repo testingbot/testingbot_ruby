@@ -43,6 +43,14 @@ module TestingBot
       get("/browsers")
     end
 
+    def get_devices
+      get("/devices")
+    end
+
+    def get_available_devices
+      get("/devices/available")
+    end
+
     def update_user_info(params = {})
       new_params = {}
       params.keys.each do |key|
@@ -87,8 +95,16 @@ module TestingBot
       get("/builds/#{build_identifier}")
     end
 
+    def delete_build(build_identifier)
+      delete("/builds/#{build_identifier}")
+    end
+
     def get_tunnels
       get("/tunnel/list")
+    end
+
+    def delete_tunnel(tunnel_identifier)
+      delete("/tunnel/#{tunnel_identifier}")
     end
 
     def get_authentication_hash(identifier)
