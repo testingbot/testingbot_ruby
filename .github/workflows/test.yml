@@ -20,3 +20,7 @@ jobs:
           gem install bundler
           bundle install --jobs 3 --retry 3
           bundle exec rake spec
+        env:
+          TB_KEY: ${{ secrets.TB_KEY }}
+          TB_SECRET: ${{ secrets.TB_SECRET }}
+
