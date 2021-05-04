@@ -10,7 +10,12 @@ Gem::Specification.new do |gem|
   gem.homepage    = "https://testingbot.com"
   gem.summary     = "Ruby API Gem to be used with testingbot.com"
   gem.description = "This gem makes interacting with the TestingBot API easy with Ruby"
-
+  gem.metadata = {
+  "bug_tracker_uri"   => "https://github.com/testingbot/testingbot_ruby/issues",
+  "documentation_uri" => "https://github.com/testingbot/testingbot_ruby",
+  "homepage_uri"      => "https://github.com/testingbot/testingbot_ruby",
+  "source_code_uri"   => "https://github.com/testingbot/testingbot_ruby"
+}
   gem.rubyforge_project = "testingbot"
 
   gem.files         = `git ls-files`.split($/).reject { |e| /spec/.match e }
