@@ -51,6 +51,30 @@ module TestingBot
       get("/devices/available")
     end
 
+    def get_team
+      get("/team-management")
+    end
+
+    def get_users_in_team(offset = 0, count = 10)
+      get("/team-management/users?offset=#{offset}&count=#{count}")
+    end
+
+    def get_user_in_team(user_id)
+      get("/team-management/users/#{user_id}")
+    end
+
+    def create_user_in_team(user = {})
+      post("/team-management/users/", user)
+    end
+
+    def update_user_in_team(user_id, user = {})
+      put("/team-management/users/#{user_id}", user)
+    end
+
+    def reset_credentials(user_id)
+      post("/team-management/users/#{user_id}/reset-keys")
+    end
+
     def update_user_info(params = {})
       new_params = {}
       params.keys.each do |key|
@@ -97,6 +121,18 @@ module TestingBot
 
     def delete_build(build_identifier)
       delete("/builds/#{build_identifier}")
+    end
+
+    def take_screenshots(configuration)
+      post("/screenshots", configuration)
+    end
+
+    def get_screenshots_history(offset = 0, count = 10)
+      get("/screenshots?offset=#{offset}&count=#{count}")
+    end
+
+    def get_screenshots(screenshots_id)
+      get("/screenshots/#{screenshots_id}")
     end
 
     def get_tunnels

@@ -63,6 +63,69 @@ Gets a list of available (physical) devices you can test on
 @api.get_available_devices
 ```
 
+### get_team
+Gets info about the current team you belong to
+
+```ruby
+@api.get_team
+```
+
+### get_users_in_team
+Gets all users in your team
+
+```ruby
+@api.get_users_in_team(offset = 0, count = 10)
+```
+
+### get_user_in_team
+Get info about a specific user in your team
+
+```ruby
+@api.get_user_in_team(user_id)
+```
+
+### create_user_in_team
+Add a user to your current team. You need to have ADMIN rights to do this.
+
+```ruby
+@api.create_user_in_team(user = {})
+```
+
+### update_user_in_team
+Updates a specific user in your team.
+
+```ruby
+@api.update_user_in_team(user_id, user = {})
+```
+
+### reset_credentials
+Resets the credentials for a specific user
+
+```ruby
+@api.reset_credentials(user_id)
+```
+
+### take_screenshots
+Take screenshots for a specific URL on specific browsers
+
+```ruby
+@api.take_screenshots(configuration)
+```
+
+### get_screenshots_history
+Retrieve screenshots that were previously generated
+
+```ruby
+@api.get_screenshots_history(offset = 0, count = 10)
+```
+
+### get_screenshots
+Get screenshots from a specific id
+
+```ruby
+@api.get_screenshots(screenshots_id)
+```
+
 ### get_user_info
 Gets your user information
 
