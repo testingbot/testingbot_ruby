@@ -1,4 +1,5 @@
 [![Gem Version](https://badge.fury.io/rb/testingbot.svg)](https://badge.fury.io/rb/testingbot)
+[![Test Changes](https://github.com/testingbot/testingbot_ruby/actions/workflows/test.yml/badge.svg)](https://github.com/testingbot/testingbot_ruby/actions/workflows/test.yml)
 
 # Testingbot-Ruby
 
