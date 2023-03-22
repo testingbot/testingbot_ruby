@@ -185,20 +185,7 @@ module TestingBot
     private
 
     def load_config_file
-      is_windows = false
-
-      begin
-        require 'rbconfig'
-        is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
-      rescue
-        is_windows = (RUBY_PLATFORM =~ /w.*32/) || (ENV["OS"] && ENV["OS"] == "Windows_NT")
-      end
-      
-      if is_windows
-        config_file = "#{ENV['HOMEDRIVE']}\\.testingbot"
-      else
-        config_file = File.expand_path("#{Dir.home}/.testingbot")
-      end
+      config_file = File.join(Dir.home, ".testingbot")
       
       if File.exist?(config_file)
         str = File.open(config_file) { |f| f.readline }.chomp

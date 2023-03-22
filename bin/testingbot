@@ -14,6 +14,6 @@ else
   api_secret = gets.chomp
 end
 
-File.open(File.expand_path("~/.testingbot"), 'w') {|f| f.write("#{api_key}:#{api_secret}") }
+File.open(File.join(Dir.home, ".testingbot"), 'w') {|f| f.write("#{api_key}:#{api_secret}") }
 
 p "Your system is now ready to use TestingBot's grid infrastructure."
