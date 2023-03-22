@@ -164,7 +164,7 @@ module TestingBot
         config_file = File.expand_path("#{Dir.home}/.testingbot")
       end
       
-      if File.exists?(config_file)
+      if File.exist?(config_file)
         str = File.open(config_file) { |f| f.readline }.chomp
         return str.split(':')
       end
