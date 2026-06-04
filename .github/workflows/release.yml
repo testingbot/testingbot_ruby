@@ -1,0 +1,38 @@
+name: Release
+
+# Publishes the gem to RubyGems when a GitHub Release is published.
+# Uses RubyGems Trusted Publishing (OIDC) — no API key is stored in the repo.
+#
+# One-time setup on rubygems.org (Gem → Settings → Trusted Publishers, or a
+# "pending" trusted publisher for the very first push):
+#   - Repository:        testingbot/testingbot_ruby
+#   - Workflow filename:  release.yml
+#   - (Environment:       leave blank, or set one and add it under `environment:` below)
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Build and publish gem
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # create the build-provenance attestation
+      id-token: write  # request the OIDC token for Trusted Publishing
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Unit tests (gate)
+        run: bundle exec rake unit
+
+      - name: Publish to RubyGems
+        uses: rubygems/release-gem@v1

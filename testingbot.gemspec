@@ -4,7 +4,7 @@ require "testingbot/version"
 
 Gem::Specification.new do |gem|
   gem.name        = "testingbot"
-  gem.version     = Testingbot::VERSION
+  gem.version     = TestingBot::VERSION
   gem.authors     = ["Jochen Delabie"]
   gem.email       = ["info@testingbot.com"]
   gem.homepage    = "https://testingbot.com"
@@ -16,7 +16,6 @@ Gem::Specification.new do |gem|
   "homepage_uri"      => "https://github.com/testingbot/testingbot_ruby",
   "source_code_uri"   => "https://github.com/testingbot/testingbot_ruby"
 }
-  gem.rubyforge_project = "testingbot"
 
   gem.files         = `git ls-files`.split($/).reject { |e| /spec/.match e }
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
@@ -29,4 +28,5 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'json'
   gem.add_development_dependency "rspec", '~> 3.3'
   gem.add_development_dependency "rake"
+  gem.add_development_dependency "webmock", '~> 3.0'
 end

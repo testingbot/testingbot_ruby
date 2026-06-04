@@ -1,19 +1,40 @@
 #!/usr/bin/env ruby
 
-if ARGV.any?
-  api_key, api_secret = ARGV.first.split(':')
-else
-  
-  p "This utility will help you set up your system to use TestingBot's infrastructure."
-  p "Once you have entered your API key and secret you will be ready to use our grid"
-  p "You can get these credentials from the TestingBot dashboard: https://testingbot.com/members"
-
-  p "Please enter your testingbot API KEY:"
-  api_key = gets.chomp
-  p "Please enter your testingbot API SECRET:"
-  api_secret = gets.chomp
+begin
+  require 'io/console'
+rescue LoadError
+  # io/console is unavailable (e.g. some JRuby builds); fall back to plain gets.
 end
 
-File.open(File.join(Dir.home, ".testingbot"), 'w') {|f| f.write("#{api_key}:#{api_secret}") }
+if ARGV.any?
+  api_key, api_secret = ARGV.first.split(':', 2)
+else
+  puts "This utility will help you set up your system to use TestingBot's infrastructure."
+  puts "Once you have entered your API key and secret you will be ready to use our grid."
+  puts "You can get these credentials from the TestingBot dashboard: https://testingbot.com/members"
 
-p "Your system is now ready to use TestingBot's grid infrastructure."
+  print "Please enter your TestingBot API KEY: "
+  api_key = (gets || '').chomp
+
+  print "Please enter your TestingBot API SECRET: "
+  api_secret =
+    if $stdin.respond_to?(:noecho) && $stdin.tty?
+      value = $stdin.noecho(&:gets)
+      puts
+      (value || '').chomp
+    else
+      (gets || '').chomp
+    end
+end
+
+if api_key.to_s.empty? || api_secret.to_s.empty?
+  abort "Both an API key and secret are required. Nothing was written."
+end
+
+config_file = File.join(Dir.home, ".testingbot")
+File.open(config_file, File::WRONLY | File::CREAT | File::TRUNC, 0o600) do |f|
+  f.write("#{api_key}:#{api_secret}")
+end
+File.chmod(0o600, config_file)
+
+puts "Your system is now ready to use TestingBot's grid infrastructure."

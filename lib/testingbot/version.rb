@@ -1,3 +1,3 @@
-module Testingbot
-  VERSION = "0.2.3"
+module TestingBot
+  VERSION = "1.0.0"
 end

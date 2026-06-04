@@ -1,16 +1,17 @@
 require "bundler/gem_tasks"
-require 'rake'
-require 'rake/testtask'
+require "rspec/core/rake_task"
 
-task :spec do
-  begin
-    require 'rspec/core/rake_task'
-    desc "Run the specs under spec/"
-    RSpec::Core::RakeTask.new do |t|
-    	t.fail_on_error = false
-	    t.pattern = FileList['spec/**/*_spec.rb'].exclude(/tunnel/)
-    end
-  rescue NameError, LoadError => e
-    puts e
-  end
+# Offline, mocked unit suite — the default and CI gate. Needs no credentials.
+RSpec::Core::RakeTask.new(:unit) do |t|
+  t.pattern = "spec/unit/**/*_spec.rb"
 end
+
+# Live integration suite — hits the real API; requires TB_KEY / TB_SECRET.
+RSpec::Core::RakeTask.new(:integration) do |t|
+  t.pattern = "spec/integration/**/*_spec.rb"
+  t.rspec_opts = "--tag integration"
+end
+
+# `rake spec` and the default task run only the offline unit suite.
+task :spec => :unit
+task :default => :unit

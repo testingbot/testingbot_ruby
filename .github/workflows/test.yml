@@ -1,25 +1,40 @@
 name: Test Changes
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  test:
+  # Offline, mocked unit suite. Runs on every push/PR (incl. forks) with no
+  # credentials and gates the build.
+  unit:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        ruby: ['2.2', '2.5', '2.6', '2.7', '3.0', '3.1', head, jruby, jruby-head, truffleruby, truffleruby-head]
-    name: Ruby ${{ matrix.ruby }} test
+        ruby: ['2.7', '3.0', '3.1', '3.2', '3.3', head, jruby, truffleruby]
+    name: Ruby ${{ matrix.ruby }} unit
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - name: Build and test
-        run: |
-          sudo apt-get -yqq install libpq-dev
-          bundle exec rake spec
+      - name: Unit tests (mocked, offline)
+        run: bundle exec rake unit
+
+  # Live integration suite. Runs only on demand or on a schedule, where the
+  # TB_KEY / TB_SECRET secrets are available (not exposed to fork PRs).
+  integration:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    name: Live integration
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - name: Integration tests (live API)
+        run: bundle exec rake integration
         env:
           TB_KEY: ${{ secrets.TB_KEY }}
           TB_SECRET: ${{ secrets.TB_SECRET }}
-
